@@ -1,0 +1,1 @@
+<div id="toastContainer" class="fixed top-3 inset-x-3 z-[70] flex flex-col gap-2 pointer-events-none items-center"></div>
