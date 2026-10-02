@@ -5,12 +5,12 @@
 
 <!-- Filter -->
 <div class="flex gap-2 overflow-x-auto pb-1 mb-4">
-  <a href="/guru/buku" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap <?= empty($class) && empty($subject) ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>">Semua</a>
+  <a hx-get="/guru/buku" hx-push-url="/guru/buku" hx-swap="innerHTML show:top" hx-target="#guru-content" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer <?= empty($class) && empty($subject) ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>">Semua</a>
   <?php foreach ($classes as $c): ?>
-    <a href="/guru/buku?class=<?= urlencode($c) ?>" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap <?= ($class ?? '') === $c ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>"><?= esc($c) ?></a>
+    <a hx-get="/guru/buku?class=<?= urlencode($c) ?>" hx-push-url="/guru/buku?class=<?= urlencode($c) ?>" hx-swap="innerHTML show:top" hx-target="#guru-content" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer <?= ($class ?? '') === $c ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>"><?= esc($c) ?></a>
   <?php endforeach; ?>
   <?php foreach ($subjects as $s): ?>
-    <a href="/guru/buku?subject=<?= urlencode($s) ?>" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap <?= ($subject ?? '') === $s ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>"><?= esc($s) ?></a>
+    <a hx-get="/guru/buku?subject=<?= urlencode($s) ?>" hx-push-url="/guru/buku?subject=<?= urlencode($s) ?>" hx-swap="innerHTML show:top" hx-target="#guru-content" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer <?= ($subject ?? '') === $s ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>"><?= esc($s) ?></a>
   <?php endforeach; ?>
 </div>
 

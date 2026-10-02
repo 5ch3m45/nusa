@@ -258,7 +258,7 @@
       const currentPath = window.location.pathname;
       if (currentPath === '/guru') {
         navItems[0].classList.add('active');
-      } else if (currentPath.startsWith('/guru/kelas') || currentPath.startsWith('/guru/murid')) {
+      } else if (currentPath.startsWith('/guru/kelas') || currentPath.startsWith('/guru/murid') || currentPath.startsWith('/guru/nilai')) {
         navItems[1].classList.add('active');
       } else if (currentPath.startsWith('/guru/kategori') || currentPath.startsWith('/guru/buku') || currentPath.startsWith('/guru/materi') || currentPath.startsWith('/guru/tugas') || currentPath.startsWith('/guru/book-store')) {
         navItems[2].classList.add('active');

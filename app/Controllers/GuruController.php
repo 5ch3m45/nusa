@@ -371,6 +371,21 @@ class GuruController extends BaseController
         return redirect()->to('/guru/murid')->with('success', 'Murid berhasil ditambahkan.');
     }
 
+    public function editStudentForm($id)
+    {
+        $student = $this->studentModel->find($id);
+        if (!$student || $student['guru_id'] != $this->getGuruId()) {
+            return redirect()->to('/guru/murid')->with('error', 'Murid tidak ditemukan.');
+        }
+
+        $isHtmx = ($_SERVER['HTTP_HX_REQUEST'] ?? '') === 'true';
+        if ($isHtmx) {
+            return view('guru/htmx/student-edit', ['student' => $student]);
+        }
+
+        return view('guru/student-edit', ['student' => $student]);
+    }
+
     public function updateStudent($id)
     {
         $data = [
@@ -423,6 +438,8 @@ class GuruController extends BaseController
                 'books'    => $books,
                 'classes'  => $classes,
                 'subjects' => $subjects,
+                'class'    => $class,
+                'subject'  => $subject,
             ]);
         }
 
@@ -430,6 +447,8 @@ class GuruController extends BaseController
             'books'    => $books,
             'classes'  => $classes,
             'subjects' => $subjects,
+            'class'    => $class,
+            'subject'  => $subject,
         ]);
     }
 
@@ -575,6 +594,23 @@ class GuruController extends BaseController
         return redirect()->to('/guru/materi')->with('success', 'Materi berhasil ditambahkan.');
     }
 
+    public function editMaterialForm($id)
+    {
+        $material = $this->materialModel->find($id);
+        if (!$material || $material['guru_id'] != $this->getGuruId()) {
+            return redirect()->to('/guru/materi')->with('error', 'Materi tidak ditemukan.');
+        }
+
+        $books = $this->bookModel->getByGuru($this->getGuruId());
+
+        $isHtmx = ($_SERVER['HTTP_HX_REQUEST'] ?? '') === 'true';
+        if ($isHtmx) {
+            return view('guru/htmx/material-edit', ['material' => $material, 'books' => $books]);
+        }
+
+        return view('guru/material-edit', ['material' => $material, 'books' => $books]);
+    }
+
     public function updateMaterial($id)
     {
         $data = [
@@ -626,6 +662,8 @@ class GuruController extends BaseController
                 'subjects'    => $subjects,
                 'books'       => $books,
                 'materials'   => $materials,
+                'class'       => $class,
+                'subject'     => $subject,
             ]);
         }
 
@@ -635,6 +673,8 @@ class GuruController extends BaseController
             'subjects'    => $subjects,
             'books'       => $books,
             'materials'   => $materials,
+            'class'       => $class,
+            'subject'     => $subject,
         ]);
     }
 
@@ -654,6 +694,24 @@ class GuruController extends BaseController
 
         $this->assignmentModel->insert($data);
         return redirect()->to('/guru/tugas')->with('success', 'Tugas berhasil ditambahkan.');
+    }
+
+    public function editAssignmentForm($id)
+    {
+        $assignment = $this->assignmentModel->find($id);
+        if (!$assignment || $assignment['guru_id'] != $this->getGuruId()) {
+            return redirect()->to('/guru/tugas')->with('error', 'Tugas tidak ditemukan.');
+        }
+
+        $books     = $this->bookModel->getByGuru($this->getGuruId());
+        $materials = $this->materialModel->getByGuru($this->getGuruId());
+
+        $isHtmx = ($_SERVER['HTTP_HX_REQUEST'] ?? '') === 'true';
+        if ($isHtmx) {
+            return view('guru/htmx/assignment-edit', ['assignment' => $assignment, 'books' => $books, 'materials' => $materials]);
+        }
+
+        return view('guru/assignment-edit', ['assignment' => $assignment, 'books' => $books, 'materials' => $materials]);
     }
 
     public function updateAssignment($id)

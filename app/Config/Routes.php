@@ -37,15 +37,18 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
     $routes->get('materi/add', 'GuruController::addMaterialForm');
     $routes->post('materi', 'GuruController::addMaterial');
     $routes->post('materi/update/(:num)', 'GuruController::updateMaterial/$1');
+    $routes->get('materi/edit/(:num)', 'GuruController::editMaterialForm/$1');
     $routes->get('materi/delete/(:num)', 'GuruController::deleteMaterial/$1');
     $routes->get('murid', 'GuruController::students');
     $routes->post('murid', 'GuruController::addStudent');
     $routes->post('murid/update/(:num)', 'GuruController::updateStudent/$1');
+    $routes->get('murid/edit/(:num)', 'GuruController::editStudentForm/$1');
     $routes->get('murid/delete/(:num)', 'GuruController::deleteStudent/$1');
     $routes->get('murid/reset-password/(:num)', 'GuruController::resetStudentPassword/$1');
     $routes->get('tugas', 'GuruController::assignments');
     $routes->post('tugas', 'GuruController::addAssignment');
     $routes->post('tugas/update/(:num)', 'GuruController::updateAssignment/$1');
+    $routes->get('tugas/edit/(:num)', 'GuruController::editAssignmentForm/$1');
     $routes->get('tugas/delete/(:num)', 'GuruController::deleteAssignment/$1');
     $routes->get('nilai', 'GuruController::grades');
     $routes->post('nilai', 'GuruController::addGrade');

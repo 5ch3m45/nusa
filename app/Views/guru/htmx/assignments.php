@@ -5,12 +5,12 @@
 
 <!-- Filter -->
 <div class="flex gap-2 overflow-x-auto pb-1 mb-4">
-  <a href="/guru/tugas" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap <?= empty($class) && empty($subject) ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>">Semua</a>
+  <a hx-get="/guru/tugas" hx-push-url="/guru/tugas" hx-swap="innerHTML show:top" hx-target="#guru-content" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer <?= empty($class) && empty($subject) ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>">Semua</a>
   <?php foreach ($classes as $c): ?>
-    <a href="/guru/tugas?class=<?= urlencode($c) ?>" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap <?= ($class ?? '') === $c ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>"><?= esc($c) ?></a>
+    <a hx-get="/guru/tugas?class=<?= urlencode($c) ?>" hx-push-url="/guru/tugas?class=<?= urlencode($c) ?>" hx-swap="innerHTML show:top" hx-target="#guru-content" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer <?= ($class ?? '') === $c ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>"><?= esc($c) ?></a>
   <?php endforeach; ?>
   <?php foreach ($subjects as $s): ?>
-    <a href="/guru/tugas?subject=<?= urlencode($s) ?>" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap <?= ($subject ?? '') === $s ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>"><?= esc($s) ?></a>
+    <a hx-get="/guru/tugas?subject=<?= urlencode($s) ?>" hx-push-url="/guru/tugas?subject=<?= urlencode($s) ?>" hx-swap="innerHTML show:top" hx-target="#guru-content" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer <?= ($subject ?? '') === $s ? 'bg-ink text-white' : 'bg-white/50 text-ink/60 nb-border' ?>"><?= esc($s) ?></a>
   <?php endforeach; ?>
 </div>
 
@@ -44,7 +44,7 @@
             <?php endif; ?>
           </div>
           <div class="flex gap-2 shrink-0">
-            <button onclick='editAssignment(<?= json_encode($a) ?>)' class="w-9 h-9 bg-nbblue/10 text-nbblue rounded-xl flex items-center justify-center active:bg-nbblue active:text-white transition">
+            <button hx-get="/guru/tugas/edit/<?= $a['id'] ?>" hx-push-url="/guru/tugas/edit/<?= $a['id'] ?>" hx-swap="innerHTML show:top" hx-target="#guru-content" class="w-9 h-9 bg-nbblue/10 text-nbblue rounded-xl flex items-center justify-center active:bg-nbblue active:text-white transition">
               <i class="fa-solid fa-pen text-xs"></i>
             </button>
             <a href="/guru/tugas/delete/<?= $a['id'] ?>" onclick="return confirm('Hapus tugas ini?')" class="w-9 h-9 bg-nbred/10 text-nbred rounded-xl flex items-center justify-center active:bg-nbred active:text-white transition">
@@ -126,70 +126,6 @@
   </form>
 </div>
 
-<!-- Edit Modal -->
-<div id="editModal" class="hidden fixed inset-0 z-50 bg-white">
-  <div class="flex items-center justify-between p-4 border-b border-ink/10" style="padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);">
-    <h3 class="font-display text-lg font-bold">Edit Tugas</h3>
-    <button onclick="document.getElementById('editModal').classList.add('hidden')" class="w-9 h-9 bg-ink/10 rounded-xl flex items-center justify-center">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-  <form id="editForm" method="post" class="p-4 space-y-4">
-    <div>
-      <label class="text-xs font-bold text-ink/60 block mb-1">Judul Tugas</label>
-      <input type="text" name="title" id="edit_title" required class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue">
-    </div>
-    <div>
-      <label class="text-xs font-bold text-ink/60 block mb-1">Pilih Buku (opsional)</label>
-      <select name="book_id" id="edit_book_id" class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue">
-        <option value="">-- Tanpa Buku --</option>
-        <?php foreach ($books as $b): ?>
-          <option value="<?= $b['id'] ?>"><?= esc($b['title']) ?> (<?= esc($b['subject']) ?>)</option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-    <div>
-      <label class="text-xs font-bold text-ink/60 block mb-1">Pilih Materi dari Buku (opsional)</label>
-      <select name="material_id" id="edit_material_id" class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue">
-        <option value="">-- Tanpa Materi --</option>
-        <?php foreach ($materials as $m): ?>
-          <option value="<?= $m['id'] ?>" data-book-id="<?= $m['book_id'] ?? '' ?>" class="material-option"><?= esc($m['title']) ?> (<?= esc($m['subject']) ?>)</option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-    <div>
-      <label class="text-xs font-bold text-ink/60 block mb-1">Deskripsi</label>
-      <textarea name="description" id="edit_description" rows="3" class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue"></textarea>
-    </div>
-    <div class="grid grid-cols-2 gap-3">
-      <div>
-        <label class="text-xs font-bold text-ink/60 block mb-1">Mata Pelajaran</label>
-        <input type="text" name="subject" id="edit_subject" required class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue">
-      </div>
-      <div>
-        <label class="text-xs font-bold text-ink/60 block mb-1">Kelas</label>
-        <input type="text" name="class" id="edit_class" required class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue">
-      </div>
-    </div>
-    <div class="grid grid-cols-2 gap-3">
-      <div>
-        <label class="text-xs font-bold text-ink/60 block mb-1">Semester</label>
-        <select name="semester" id="edit_semester" class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue">
-          <option value="1">1</option>
-          <option value="2">2</option>
-        </select>
-      </div>
-      <div>
-        <label class="text-xs font-bold text-ink/60 block mb-1">Deadline</label>
-        <input type="date" name="due_date" id="edit_due_date" required class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue">
-      </div>
-    </div>
-    <button type="submit" class="w-full py-3.5 bg-nbblue text-white rounded-xl text-sm font-bold nb-btn">
-      Simpan Perubahan
-    </button>
-  </form>
-</div>
-
 <script>
 // Book data for auto-fill
 const booksData = <?= json_encode(array_map(function($b) {
@@ -255,19 +191,5 @@ function autoFillFromBook(bookSelectId, subjectId, classId, semesterId, material
 // Auto-fill for add form
 autoFillFromBook('add_book_id', 'add_subject', 'add_class', 'add_semester', 'add_material_id');
 
-// Auto-fill for edit form
-autoFillFromBook('edit_book_id', 'edit_subject', 'edit_class', 'edit_semester', 'edit_material_id');
 
-function editAssignment(a) {
-  document.getElementById('editForm').action = '/guru/tugas/update/' + a.id;
-  document.getElementById('edit_title').value = a.title;
-  document.getElementById('edit_book_id').value = a.book_id || '';
-  document.getElementById('edit_material_id').value = a.material_id || '';
-  document.getElementById('edit_description').value = a.description;
-  document.getElementById('edit_subject').value = a.subject;
-  document.getElementById('edit_class').value = a.class;
-  document.getElementById('edit_semester').value = a.semester;
-  document.getElementById('edit_due_date').value = a.due_date;
-  document.getElementById('editModal').classList.remove('hidden');
-}
 </script>

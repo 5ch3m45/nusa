@@ -21,7 +21,7 @@
             <p class="text-sm font-bold">Kelas <?= esc($class) ?></p>
             <p class="text-[11px] text-ink/50"><?= $count ?> murid</p>
           </div>
-          <a href="/guru/murid?class=<?= urlencode($class) ?>" class="px-3 py-2 bg-nbblue text-white rounded-xl text-xs font-bold nb-btn">
+          <a hx-get="/guru/murid?class=<?= urlencode($class) ?>" hx-push-url="/guru/murid?class=<?= urlencode($class) ?>" hx-swap="innerHTML show:top" hx-target="#guru-content" class="px-3 py-2 bg-nbblue text-white rounded-xl text-xs font-bold nb-btn cursor-pointer">
             Lihat
           </a>
         </div>
