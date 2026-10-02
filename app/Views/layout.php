@@ -30,12 +30,12 @@ tailwind.config = {
       },
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'sans-serif'],
-        display: ['Google Sans', 'system-ui', 'sans-serif']
+        display: ['Bricolage Grotesque', 'system-ui', 'sans-serif']
       },
       boxShadow: {
-        nb: '0 4px 14px rgba(45,51,72,.10)',
-        nbsm: '0 2px 6px rgba(45,51,72,.12)',
-        nblg: '0 12px 32px rgba(45,51,72,.16)'
+        nb: 'none',
+        nbsm: 'none',
+        nblg: 'none'
       }
     }
   }
@@ -47,16 +47,16 @@ tailwind.config = {
   body{ background-color:#E9EEFB; overscroll-behavior:none; -webkit-tap-highlight-color:transparent; }
   #mainScroll{ -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
   .nb-border{ border:1.5px solid rgba(45,51,72,.10); }
-  .nb-card{ background-color:rgba(255,255,255,.62); -webkit-backdrop-filter:blur(18px) saturate(170%); backdrop-filter:blur(18px) saturate(170%); border:1px solid rgba(255,255,255,.8); border-radius:1.5rem; box-shadow:0 8px 28px rgba(45,51,72,.09); }
-  .glass{ background-color:rgba(255,255,255,.6); -webkit-backdrop-filter:blur(18px) saturate(170%); backdrop-filter:blur(18px) saturate(170%); border:1px solid rgba(255,255,255,.8); box-shadow:0 8px 30px rgba(45,51,72,.12); }
-  .glass-header{ background-color:rgba(255,255,255,.55); -webkit-backdrop-filter:blur(18px) saturate(170%); backdrop-filter:blur(18px) saturate(170%); border-bottom:1px solid rgba(255,255,255,.8); box-shadow:0 4px 20px rgba(45,51,72,.06); }
-  .nb-btn{ border-radius:1rem; font-weight:400; box-shadow:0 2px 6px rgba(45,51,72,.15); transition:transform .1s ease; }
+  .nb-card{ background-color:rgba(255,255,255,.62); -webkit-backdrop-filter:blur(18px) saturate(170%); backdrop-filter:blur(18px) saturate(170%); border:1px solid rgba(255,255,255,.8); border-radius:1.5rem; }
+  .glass{ background-color:rgba(255,255,255,.6); -webkit-backdrop-filter:blur(18px) saturate(170%); backdrop-filter:blur(18px) saturate(170%); border:1px solid rgba(255,255,255,.8); }
+  .glass-header{ background-color:rgba(255,255,255,.55); -webkit-backdrop-filter:blur(18px) saturate(170%); backdrop-filter:blur(18px) saturate(170%); border-bottom:1px solid rgba(255,255,255,.8); }
+  .nb-btn{ border-radius:1rem; font-weight:400; transition:transform .1s ease; }
   .nb-btn:active{ transform:scale(.97); }
-  .nb-pill{ -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border-radius:999px; font-weight:700; box-shadow:0 1px 4px rgba(45,51,72,.12); transition:transform .1s ease; }
+  .nb-pill{ -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border-radius:999px; font-weight:700; transition:transform .1s ease; }
   .nb-pill:active{ transform:scale(.97); }
   @keyframes toastIn{ from{opacity:0;} to{opacity:1;} }
   .animate-toast{ animation: toastIn .2s ease forwards; }
-  .certificate-border{ border:3px solid #FFCF48; box-shadow: inset 0 0 0 5px #fff, inset 0 0 0 7px #FFE49A; }
+  .certificate-border{ border:3px solid #FFCF48; }
   @media print{
     body *{ visibility:hidden; }
     #printable-certificate, #printable-certificate *{ visibility:visible; }

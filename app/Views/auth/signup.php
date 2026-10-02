@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - JELAJAH NUSA</title>
+  <title>Daftar - JELAJAH NUSA</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
@@ -43,7 +43,7 @@
         <i class="fa-solid fa-compass"></i>
       </div>
       <h1 class="font-display text-2xl font-bold">JELAJAH NUSA</h1>
-      <p class="text-xs text-ink/60 font-semibold">Masuk untuk mulai petualangan</p>
+      <p class="text-xs text-ink/60 font-semibold">Daftar sebagai Guru atau Murid</p>
     </div>
 
     <div class="bg-white/70 backdrop-blur-xl rounded-3xl p-6 shadow-nblg">
@@ -61,28 +61,43 @@
         </div>
       <?php endif; ?>
 
-      <?php if (session()->getFlashdata('success')): ?>
-        <div class="mb-4 p-3 bg-nbgreen/10 border border-nbgreen/30 rounded-xl text-xs font-bold text-nbgreen">
-          <?= session()->getFlashdata('success') ?>
+      <form action="/signup" method="post" class="space-y-4">
+        <div>
+          <label class="text-xs font-extrabold text-ink/60 block mb-1">Nama Lengkap</label>
+          <input type="text" name="name" required class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue" placeholder="Nama lengkap">
         </div>
-      <?php endif; ?>
-
-      <form action="/login" method="post" class="space-y-4">
         <div>
           <label class="text-xs font-extrabold text-ink/60 block mb-1">Email</label>
           <input type="email" name="email" required class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue" placeholder="email@example.com">
         </div>
         <div>
           <label class="text-xs font-extrabold text-ink/60 block mb-1">Password</label>
-          <input type="password" name="password" required class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue" placeholder="Password">
+          <input type="password" name="password" required minlength="6" class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue" placeholder="Minimal 6 karakter">
+        </div>
+        <div>
+          <label class="text-xs font-extrabold text-ink/60 block mb-1">Daftar Sebagai</label>
+          <div class="flex gap-3">
+            <label class="flex-1 cursor-pointer">
+              <input type="radio" name="role" value="guru" checked class="peer hidden">
+              <div class="text-center py-3 rounded-xl nb-border bg-white/50 peer-checked:bg-nbgreen peer-checked:text-white peer-checked:border-nbgreen transition">
+                <i class="fa-solid fa-chalkboard-user mr-1"></i> Guru
+              </div>
+            </label>
+            <label class="flex-1 cursor-pointer">
+              <input type="radio" name="role" value="murid" class="peer hidden">
+              <div class="text-center py-3 rounded-xl nb-border bg-white/50 peer-checked:bg-nbblue peer-checked:text-white peer-checked:border-nbblue transition">
+                <i class="fa-solid fa-graduation-cap mr-1"></i> Murid
+              </div>
+            </label>
+          </div>
         </div>
         <button type="submit" class="w-full py-3 bg-nbscarlet text-white nb-btn text-sm font-bold">
-          Masuk <i class="fa-solid fa-arrow-right ml-1"></i>
+          Daftar <i class="fa-solid fa-arrow-right ml-1"></i>
         </button>
       </form>
 
       <p class="text-center text-xs text-ink/50 mt-4">
-        Belum punya akun? <a href="/signup" class="text-nbblue font-bold">Daftar di sini</a>
+        Sudah punya akun? <a href="/login" class="text-nbblue font-bold">Login di sini</a>
       </p>
     </div>
   </div>

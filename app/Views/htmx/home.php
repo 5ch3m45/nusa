@@ -30,7 +30,7 @@
     </div>
   </div>
   <button hx-get="/htmx/missions" 
-    hx-replace-url="/missions"
+    hx-push-url="/missions"
     hx-swap="innerHTML show:top"
     hx-target="#mainScroll"
     onclick="setActiveNav('missions')" 

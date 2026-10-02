@@ -4,11 +4,73 @@ use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
 $routes->get('/', 'Home::index');
-$routes->get('/login', 'AuthController::index');
 $routes->get('/missions', 'MissionController::index');
 $routes->get('/achievements', 'AchievementController::index');
 $routes->get('/profile', 'ProfileController::index');
 
+// Auth routes
+$routes->get('/signup', 'AuthController::signup');
+$routes->post('/signup', 'AuthController::doSignup');
+$routes->get('/login', 'AuthController::login');
+$routes->post('/login', 'AuthController::doLogin');
+$routes->get('/logout', 'AuthController::logout');
+
+// Guru routes (protected)
+$routes->group('guru', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'GuruController::index');
+    $routes->get('kelas', 'GuruController::classes');
+    $routes->get('pengaturan', 'GuruController::settings');
+    $routes->get('pengaturan/profile', 'GuruController::profile');
+    $routes->post('pengaturan/profile', 'GuruController::updateProfile');
+    $routes->get('pengaturan/keamanan', 'GuruController::keamanan');
+    $routes->post('pengaturan/keamanan', 'GuruController::updatePassword');
+    $routes->get('kategori', 'GuruController::kategori');
+    $routes->get('book-store', 'GuruController::bookStore');
+    $routes->get('book-store/(:num)', 'GuruController::bookStoreDetail/$1');
+    $routes->get('book-store/take/(:num)', 'GuruController::takeBook/$1');
+    $routes->get('buku', 'GuruController::books');
+    $routes->get('buku/add', 'GuruController::addBookForm');
+    $routes->post('buku', 'GuruController::addBook');
+    $routes->post('buku/update/(:num)', 'GuruController::updateBook/$1');
+    $routes->get('buku/delete/(:num)', 'GuruController::deleteBook/$1');
+    $routes->get('materi', 'GuruController::materials');
+    $routes->get('materi/add', 'GuruController::addMaterialForm');
+    $routes->post('materi', 'GuruController::addMaterial');
+    $routes->post('materi/update/(:num)', 'GuruController::updateMaterial/$1');
+    $routes->get('materi/delete/(:num)', 'GuruController::deleteMaterial/$1');
+    $routes->get('murid', 'GuruController::students');
+    $routes->post('murid', 'GuruController::addStudent');
+    $routes->post('murid/update/(:num)', 'GuruController::updateStudent/$1');
+    $routes->get('murid/delete/(:num)', 'GuruController::deleteStudent/$1');
+    $routes->get('murid/reset-password/(:num)', 'GuruController::resetStudentPassword/$1');
+    $routes->get('tugas', 'GuruController::assignments');
+    $routes->post('tugas', 'GuruController::addAssignment');
+    $routes->post('tugas/update/(:num)', 'GuruController::updateAssignment/$1');
+    $routes->get('tugas/delete/(:num)', 'GuruController::deleteAssignment/$1');
+    $routes->get('nilai', 'GuruController::grades');
+    $routes->post('nilai', 'GuruController::addGrade');
+    $routes->post('nilai/update/(:num)', 'GuruController::updateGrade/$1');
+    $routes->get('nilai/delete/(:num)', 'GuruController::deleteGrade/$1');
+});
+
+// Admin routes (protected)
+$routes->group('admin', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'AdminController::index');
+    $routes->get('buku', 'AdminController::books');
+    $routes->post('buku', 'AdminController::addBook');
+    $routes->post('buku/update/(:num)', 'AdminController::updateBook/$1');
+    $routes->get('buku/delete/(:num)', 'AdminController::deleteBook/$1');
+    $routes->get('materi', 'AdminController::materials');
+    $routes->post('materi', 'AdminController::addMaterial');
+    $routes->post('materi/update/(:num)', 'AdminController::updateMaterial/$1');
+    $routes->get('materi/delete/(:num)', 'AdminController::deleteMaterial/$1');
+    $routes->get('tugas', 'AdminController::assignments');
+    $routes->post('tugas', 'AdminController::addAssignment');
+    $routes->post('tugas/update/(:num)', 'AdminController::updateAssignment/$1');
+    $routes->get('tugas/delete/(:num)', 'AdminController::deleteAssignment/$1');
+});
+
+// HTMX routes
 $routes->group('htmx', function ($routes) {
     $routes->get('home', 'Htmx\HomeController::index');
     $routes->get('missions', 'Htmx\MissionController::index');
