@@ -753,6 +753,16 @@ class GuruController extends BaseController
             $grades = $this->gradeModel->getGradesWithDetails($guruId);
         }
 
+        $isHtmx = ($_SERVER['HTTP_HX_REQUEST'] ?? '') === 'true';
+        if($isHtmx) {
+            return view('guru/htmx/grades', [
+                'grades'      => $grades,
+                'assignments' => $assignments,
+                'students'    => $students,
+                'assignmentId' => $assignmentId,
+            ]);
+        }
+
         return view('guru/grades', [
             'grades'      => $grades,
             'assignments' => $assignments,

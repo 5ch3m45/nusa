@@ -274,6 +274,7 @@
 
     // Also update when content swaps (history restore, forms, etc.)
     document.body.addEventListener('htmx:afterSwap', function (evt) {
+      console.log('htmx:afterSwap event triggered:', evt.detail.target);
       if (evt.detail.target && evt.detail.target.id === 'guru-content') {
         updateActiveNavItem();
         closeSidebar()
