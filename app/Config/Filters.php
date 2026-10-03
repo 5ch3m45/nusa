@@ -27,6 +27,7 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'auth'          => AuthFilter::class,
+        'studentAuth'   => \App\Filters\StudentAuthFilter::class,
     ];
 
     public array $required = [

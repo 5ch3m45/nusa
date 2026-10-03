@@ -87,7 +87,49 @@ class AuthController extends BaseController
             return redirect()->to('/guru')->with('success', 'Selamat datang, ' . $user['name']);
         }
 
-        return redirect()->to('/')->with('success', 'Selamat datang, ' . $user['name']);
+        return redirect()->to('/murid')->with('success', 'Selamat datang, ' . $user['name']);
+    }
+
+    public function studentLogin()
+    {
+        if (session()->get('student_id')) {
+            return redirect()->to('/murid');
+        }
+        return view('auth/student_login');
+    }
+
+    public function doStudentLogin()
+    {
+        $rules = [
+            'username' => 'required',
+            'password' => 'required',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $username = $this->request->getPost('username');
+        $password = $this->request->getPost('password');
+
+        $student = (new \App\Models\StudentModel())->where('username', $username)->first();
+
+        if (!$student || !password_verify($password, $student['password_hash'])) {
+            return redirect()->back()->withInput()->with('error', 'Username atau password salah.');
+        }
+
+        session()->set('student_id', $student['id']);
+        session()->set('student_name', $student['name']);
+        session()->set('student_class', $student['class']);
+        session()->set('guru_id', $student['guru_id']);
+
+        return redirect()->to('/murid')->with('success', 'Selamat datang, ' . $student['name']);
+    }
+
+    public function studentLogout()
+    {
+        session()->remove(['student_id', 'student_name', 'student_class', 'guru_id']);
+        return redirect()->to('/murid/login')->with('success', 'Anda telah logout.');
     }
 
     public function logout()

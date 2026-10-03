@@ -29,8 +29,8 @@
       <button onclick="openChapter(currentChapter.id)" class="w-full py-2.5 bg-nbgreen text-white nb-btn text-xs">Lanjutkan <i class="fa-solid fa-arrow-right ml-1"></i></button>
     </div>
   </div>
-  <button hx-get="/htmx/missions" 
-    hx-push-url="/missions"
+  <button hx-get="/murid/htmx/missions" 
+    hx-push-url="/murid/missions"
     hx-swap="innerHTML show:top"
     hx-target="#mainScroll"
     onclick="setActiveNav('missions')" 

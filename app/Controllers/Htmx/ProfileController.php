@@ -9,6 +9,6 @@ class ProfileController extends BaseController
 {
     public function index()
     {
-        return view('htmx/profile');
+        return view('murid/htmx/profile');
     }
 }

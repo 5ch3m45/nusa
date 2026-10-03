@@ -9,6 +9,6 @@ class AchievementController extends BaseController
 {
     public function index()
     {
-        return view('achievement');
+        return view('murid/achievement');
     }
 }

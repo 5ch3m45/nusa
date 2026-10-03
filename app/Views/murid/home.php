@@ -1,5 +1,5 @@
 <?= $this->extend('app') ?>
 
 <?= $this->section('content') ?>
-  <?= $this->include('htmx/profile') ?>
+  <?= $this->include('murid/htmx/home') ?>
 <?= $this->endSection() ?>

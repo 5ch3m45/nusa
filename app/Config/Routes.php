@@ -3,10 +3,9 @@
 use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
-$routes->get('/', 'Home::index');
-$routes->get('/missions', 'MissionController::index');
-$routes->get('/achievements', 'AchievementController::index');
-$routes->get('/profile', 'ProfileController::index');
+$routes->get('/', function () {
+    return redirect()->to('/murid');
+});
 
 // Auth routes
 $routes->get('/signup', 'AuthController::signup');
@@ -73,11 +72,22 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('tugas/delete/(:num)', 'AdminController::deleteAssignment/$1');
 });
 
-// HTMX routes
-$routes->group('htmx', function ($routes) {
-    $routes->get('home', 'Htmx\HomeController::index');
-    $routes->get('missions', 'Htmx\MissionController::index');
-    $routes->get('missions/semester/(:num)', 'Htmx\MissionController::semester/$1');
-    $routes->get('achievements', 'Htmx\AchievementController::index');
-    $routes->get('profile', 'Htmx\ProfileController::index');
+// Murid routes
+$routes->get('murid/login', 'AuthController::studentLogin');
+$routes->post('murid/login', 'AuthController::doStudentLogin');
+$routes->get('murid/logout', 'AuthController::studentLogout');
+
+$routes->group('murid', ['filter' => 'studentAuth'], function ($routes) {
+    $routes->get('/', 'Home::index');
+    $routes->get('missions', 'MissionController::index');
+    $routes->get('achievements', 'AchievementController::index');
+    $routes->get('profile', 'ProfileController::index');
+
+    $routes->group('htmx', function ($routes) {
+        $routes->get('home', 'Htmx\HomeController::index');
+        $routes->get('missions', 'Htmx\MissionController::index');
+        $routes->get('missions/semester/(:num)', 'Htmx\MissionController::semester/$1');
+        $routes->get('achievements', 'Htmx\AchievementController::index');
+        $routes->get('profile', 'Htmx\ProfileController::index');
+    });
 });

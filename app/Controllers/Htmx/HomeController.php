@@ -9,7 +9,7 @@ class HomeController extends BaseController
 {
     public function index()
     {
-        return view('htmx/home', [
+        return view('murid/htmx/home', [
             'profile' => (new UserService())->getUserProfile()
         ]);
     }

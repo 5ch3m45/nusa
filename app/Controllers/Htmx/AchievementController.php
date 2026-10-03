@@ -9,6 +9,6 @@ class AchievementController extends BaseController
 {
     public function index()
     {
-        return view('htmx/achievement');
+        return view('murid/htmx/achievement');
     }
 }

@@ -12,7 +12,7 @@ class MissionController extends BaseController
         $user = (new \App\Services\UserService())->getUserProfile();
         $missions = (new \App\Services\MissionService())->getMissionsByClassAndSemester($user['class'] ?? 4, 1);
 
-        return view('mission', [
+        return view('murid/mission', [
             'page' => 'missions',
             'missions' => $missions,
         ]);

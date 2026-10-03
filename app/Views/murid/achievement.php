@@ -1,5 +1,5 @@
 <?= $this->extend('app') ?>
 
 <?= $this->section('content') ?>
-  <?= $this->include('htmx/achievement') ?>
+  <?= $this->include('murid/htmx/achievement') ?>
 <?= $this->endSection() ?>

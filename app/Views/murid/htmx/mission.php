@@ -1,13 +1,13 @@
 <div id="view-missions" class="space-y-4">
   <div class="flex gap-2">
-    <button hx-get="/htmx/missions/semester/1" 
-      hx-push-url="/missions/semester/1"
+    <button hx-get="/murid/htmx/missions/semester/1" 
+      hx-push-url="/murid/missions/semester/1"
       hx-swap="innerHTML show:top"
       hx-target="#mainScroll" onclick="setActiveNav('missions'); setSemesterActive(1)" id="btnSem1" class="flex-1 py-2.5 nb-pill text-xs bg-nbyellow text-ink">
       <i class="fa-solid fa-book-bookmark mr-1"></i> Semester 1
     </button>
-    <button hx-get="/htmx/missions/semester/2" 
-      hx-push-url="/missions/semester/2"
+    <button hx-get="/murid/htmx/missions/semester/2" 
+      hx-push-url="/murid/missions/semester/2"
       hx-swap="innerHTML show:top"
       hx-target="#mainScroll" onclick="setActiveNav('missions'); setSemesterActive(2)" id="btnSem2" class="flex-1 py-2.5 nb-pill text-xs bg-white/60 text-ink/60">
       <i class="fa-solid fa-book-open mr-1"></i> Semester 2

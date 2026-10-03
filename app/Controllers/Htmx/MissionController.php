@@ -11,7 +11,7 @@ class MissionController extends BaseController
         $user = (new \App\Services\UserService())->getUserProfile();
         $missions = (new \App\Services\MissionService())->getMissionsByClassAndSemester($user['class'] ?? 1, 1);
         
-        return view('htmx/mission', [
+        return view('murid/htmx/mission', [
             'missions' => $missions,
         ]);
     }
@@ -21,7 +21,7 @@ class MissionController extends BaseController
         $user = (new \App\Services\UserService())->getUserProfile();
         $missions = (new \App\Services\MissionService())->getMissionsByClassAndSemester($user['class'] ?? 1, (int) $semester);
         
-        return view('htmx/mission', [
+        return view('murid/htmx/mission', [
             'missions' => $missions,
         ]);
     }
