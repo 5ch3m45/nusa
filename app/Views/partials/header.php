@@ -5,7 +5,7 @@
         <i class="fa-solid fa-compass text-red"></i>
       </div>
       <div class="leading-tight">
-        <h1 class="font-display text-base font-bold tracking-wide">JELAJAH NUSA</h1>
+        <h1 class="font-display text-base font-bold tracking-wide">LENTERA</h1>
         <p class="text-[11px] font-bold text-ink/60">Bahasa & IPAS &bull; Kelas <?= esc($profile['class'] ?? 1) ?></p>
       </div>
     </div>

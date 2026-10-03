@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Login - JELAJAH NUSA</title>
+  <title>Login - LENTERA</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
@@ -42,7 +42,7 @@
       <div class="w-16 h-16 mx-auto bg-gradient-to-br from-nbscarlet to-nbtruered rounded-2xl flex items-center justify-center text-3xl text-white shadow-nb mb-3">
         <i class="fa-solid fa-compass"></i>
       </div>
-      <h1 class="font-display text-2xl font-bold">JELAJAH NUSA</h1>
+      <h1 class="font-display text-2xl font-bold">LENTERA</h1>
       <p class="text-xs text-ink/60 font-semibold">Masuk untuk mulai petualangan</p>
     </div>
 

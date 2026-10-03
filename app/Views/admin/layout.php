@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Admin - JELAJAH NUSA</title>
+  <title>Admin - LENTERA</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
@@ -55,7 +55,7 @@
         <i class="fa-solid fa-shield-halved"></i>
       </div>
       <div>
-        <h1 class="font-display text-sm font-bold leading-tight">JELAJAH NUSA</h1>
+        <h1 class="font-display text-sm font-bold leading-tight">LENTERA</h1>
         <p class="text-[10px] text-ink/50 font-semibold">Super Admin</p>
       </div>
     </div>

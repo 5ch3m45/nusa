@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>JELAJAH NUSA - Petualangan Kelas 4</title>
+<title>LENTERA - Petualangan Kelas 4</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -883,12 +883,12 @@ function updateCertDate() {
 }
 
 function shareToWhatsApp() {
-  const text = `*LAPORAN PRESTASI JELAJAH NUSA*\n\n` +
+  const text = `*LAPORAN PRESTASI LENTERA*\n\n` +
     `Nama Siswa: *${studentName}*\n` +
     `Misi: *${currentChapter.babNum} - ${currentChapter.title}*\n\n` +
     `IPAS: *${quizScores.ipas}* (${getPredicate(quizScores.ipas)})\n` +
     `B. Indonesia: *${quizScores.bindo}* (${getPredicate(quizScores.bindo)})\n\n` +
-    `_Piagam telah terbit di aplikasi Jelajah Nusa!_`;
+    `_Piagam telah terbit di aplikasi LENTERA!_`;
   const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
   window.open(waUrl, '_blank');
 }

@@ -10,8 +10,8 @@
     <p class="text-xs text-ink/60 font-semibold">Siswa Kelas <?= esc($profile['class'] ?? '-') ?></p>
   </div>
   <div class="nb-card p-4 text-xs text-ink/60 space-y-1 text-center">
-    <p class="font-bold text-ink/80">JELAJAH NUSA &copy; 2026</p>
-    <p>Aplikasi Edukasi Integratif Kelas 4 SD &bull; Kurikulum Merdeka</p>
+    <p class="font-bold text-ink/80">LENTERA &copy; 2026</p>
+    <p>Aplikasi Edukasi Integratif &bull; Kurikulum Merdeka</p>
   </div>
   <a href="/murid/logout" class="block w-full py-3 bg-white/70 text-nbred nb-btn text-sm text-center"><i class="fa-solid fa-right-from-bracket mr-1"></i> Keluar</a>
 </div>

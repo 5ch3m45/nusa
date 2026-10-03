@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>JELAJAH NUSA - Petualangan Kelas 4</title>
+<title>LENTERA - Petualangan Kelas 4</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -85,7 +85,7 @@ tailwind.config = {
           <i class="fa-solid fa-compass text-red"></i>
         </div>
         <div class="leading-tight">
-          <h1 class="font-display text-base font-bold tracking-wide">JELAJAH NUSA</h1>
+          <h1 class="font-display text-base font-bold tracking-wide">LENTERA</h1>
           <p class="text-[11px] font-bold text-ink/60">Bahasa & IPAS &bull; Kelas 4</p>
         </div>
       </div>
@@ -188,11 +188,11 @@ tailwind.config = {
           <label for="studentNameInput" class="text-[11px] font-extrabold uppercase text-ink/50 block mb-1">Nama Ksatria</label>
           <input type="text" id="studentNameInput" value="Ahmad Rizky" onchange="updateStudentName(this.value)" class="w-full text-center bg-white/50 nb-border rounded-xl px-3 py-2 text-sm font-bold focus:outline-none focus:border-nbblue">
         </div>
-        <p class="text-xs text-ink/60 font-semibold">Siswa Kelas 4 SD</p>
+        <p class="text-xs text-ink/60 font-semibold">Siswa</p>
       </div>
       <div class="nb-card p-4 text-xs text-ink/60 space-y-1 text-center">
-        <p class="font-bold text-ink/80">JELAJAH NUSA &copy; 2026</p>
-        <p>Aplikasi Edukasi Integratif Kelas 4 SD &bull; Kurikulum Merdeka</p>
+        <p class="font-bold text-ink/80">LENTERA &copy; 2026</p>
+        <p>Aplikasi Edukasi Integratif &bull; Kurikulum Merdeka</p>
       </div>
       <button onclick="logout()" class="w-full py-3 bg-white/70 text-nbred nb-btn text-sm"><i class="fa-solid fa-right-from-bracket mr-1"></i> Keluar</button>
     </div>
@@ -316,7 +316,7 @@ tailwind.config = {
 
         <div id="printable-certificate" class="bg-nbyellow/20 p-5 rounded-2xl certificate-border text-center space-y-4 relative overflow-hidden">
           <div class="space-y-1">
-            <p class="text-[10px] font-extrabold tracking-widest text-ink/60 uppercase">Jelajah Nusa</p>
+            <p class="text-[10px] font-extrabold tracking-widest text-ink/60 uppercase">LENTERA</p>
             <h2 class="font-display text-lg font-extrabold text-ink">PIAGAM PENGHARGAAN</h2>
             <div class="w-16 h-1 bg-nborange mx-auto rounded-full"></div>
           </div>
@@ -416,7 +416,7 @@ tailwind.config = {
       <div class="w-20 h-20 mx-auto bg-white rounded-3xl flex items-center justify-center text-4xl shadow-nb text-nbscarlet">
         <i class="fa-solid fa-compass"></i>
       </div>
-      <h1 class="font-display text-2xl font-bold tracking-wide mt-4">JELAJAH NUSA</h1>
+      <h1 class="font-display text-2xl font-bold tracking-wide mt-4">LENTERA</h1>
       <p class="text-xs font-semibold opacity-90 mt-1">Petualangan Bahasa &amp; IPAS &bull; Kelas 4</p>
     </div>
     <div class="flex-1 glass !border-b-0 -mt-8 rounded-t-[2rem] px-6 pt-7 space-y-4" style="padding-bottom:calc(env(safe-area-inset-bottom,0px) + 1.5rem);">
@@ -1286,12 +1286,12 @@ function updateCertDate() {
 }
 
 function shareToWhatsApp() {
-  const text = `*LAPORAN PRESTASI JELAJAH NUSA*\n\n` +
+  const text = `*LAPORAN PRESTASI LENTERA*\n\n` +
     `Nama Siswa: *${studentName}*\n` +
     `Misi: *${currentChapter.babNum} - ${currentChapter.title}*\n\n` +
     `IPAS: *${quizScores.ipas}* (${getPredicate(quizScores.ipas)})\n` +
     `B. Indonesia: *${quizScores.bindo}* (${getPredicate(quizScores.bindo)})\n\n` +
-    `_Piagam telah terbit di aplikasi Jelajah Nusa!_`;
+    `_Piagam telah terbit di aplikasi LENTERA!_`;
   const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
   window.open(waUrl, '_blank');
 }

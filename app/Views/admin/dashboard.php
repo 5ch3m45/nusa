@@ -3,7 +3,7 @@
 
 <div class="mt-4 mb-6">
   <h2 class="font-display text-xl font-bold">Dashboard Admin</h2>
-  <p class="text-sm text-ink/60">Kelola Book Store JELAJAH NUSA</p>
+  <p class="text-sm text-ink/60">Kelola Book Store LENTERA</p>
 </div>
 
 <!-- Stats -->
