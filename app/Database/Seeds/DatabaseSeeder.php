@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
         $this->call('BookSeeder');
         $this->call('MaterialSeeder');
         $this->call('StudentMaterialProgressSeeder');
+        $this->call('SubmaterialSeeder');
         $this->call('AssignmentSeeder');
         $this->call('GradeSeeder');
         $this->call('BookStoreSeeder');

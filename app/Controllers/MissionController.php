@@ -7,6 +7,7 @@ use App\Models\AssignmentModel;
 use App\Models\BookModel;
 use App\Models\MaterialModel;
 use App\Models\StudentMaterialProgressModel;
+use App\Models\SubmaterialModel;
 use App\Services\UserService;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -74,7 +75,7 @@ class MissionController extends BaseController
     {
         $material = $this->findStudentMaterial($materialId);
 
-        return view('murid/mission_detail', [
+        $data = [
             'page'       => 'missions',
             'material'   => $material,
             'book'       => $material['book_id'] ? (new BookModel())->find($material['book_id']) : null,
@@ -85,7 +86,13 @@ class MissionController extends BaseController
                 ->first(),
             'activeTab'  => $tab,
             'profile'    => (new UserService())->getUserProfile(),
-        ]);
+        ];
+
+        if ($tab === 'material') {
+            $data['submaterials'] = (new SubmaterialModel())->getByMaterial($materialId);
+        }
+
+        return view('murid/mission_detail', $data);
     }
 
     private function findStudentMaterial(int $materialId): array

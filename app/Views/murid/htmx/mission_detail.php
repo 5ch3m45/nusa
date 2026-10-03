@@ -34,4 +34,25 @@ $activeTab = $activeTab ?? 'material';
       <?= $this->include('murid/htmx/mission_detail_' . $activeTab) ?>
     </div>
   </div>
+
+  <?php
+  $viewerUrl = (($activeTab ?? '') === 'book' && !empty($book))
+      ? \App\Services\BookService::viewerUrl($book)
+      : null;
+  ?>
+  <?php if ($viewerUrl): ?>
+    <div id="bookViewer" class="hidden nb-card p-3 space-y-2">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-[11px] font-extrabold text-ink/50 flex items-center gap-1.5">
+          <i class="fa-solid fa-file-pdf text-nbred"></i> PDF Viewer
+        </span>
+        <button type="button" onclick="document.getElementById('bookViewer').classList.add('hidden')" class="w-7 h-7 bg-ink/10 text-ink/60 rounded-lg flex items-center justify-center active:bg-ink/20" aria-label="Tutup">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      </div>
+      <div class="w-full h-[70vh] bg-ink/10 rounded-xl overflow-hidden">
+        <iframe class="w-full h-full" src="<?= esc($viewerUrl) ?>" title="<?= esc($book['title']) ?>"></iframe>
+      </div>
+    </div>
+  <?php endif; ?>
 </div>

@@ -15,10 +15,11 @@
       </div>
       <span class="text-[10px] font-extrabold uppercase bg-ink/10 text-ink/60 nb-pill px-2 py-0.5 shrink-0"><?= $book['type'] === 'pdf' ? 'PDF' : 'Tautan' ?></span>
     </div>
-    <?php if ($book['type'] === 'pdf'): ?>
-      <a href="/<?= esc(ltrim((string) $book['url_or_path'], '/')) ?>" target="_blank" rel="noopener" class="w-full py-2.5 bg-nbpurple text-white nb-btn text-xs flex items-center justify-center gap-2">
+    <?php $viewerUrl = \App\Services\BookService::viewerUrl($book); ?>
+    <?php if ($viewerUrl): ?>
+      <button type="button" onclick="document.getElementById('bookViewer').classList.toggle('hidden')" class="w-full py-2.5 bg-nbpurple text-white nb-btn text-xs flex items-center justify-center gap-2">
         <i class="fa-solid fa-file-pdf mr-1"></i> Lihat PDF
-      </a>
+      </button>
     <?php else: ?>
       <a href="<?= esc((string) $book['url_or_path']) ?>" target="_blank" rel="noopener" class="w-full py-2.5 bg-nbpurple text-white nb-btn text-xs flex items-center justify-center gap-2">
         <i class="fa-solid fa-book-open mr-1"></i> Buka Buku
