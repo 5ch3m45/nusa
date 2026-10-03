@@ -71,7 +71,7 @@
         hx-swap="innerHTML show:top"
         hx-target="#guru-content" class="nb-card p-4 flex items-center gap-3 active:scale-95 transition">
       <div class="w-10 h-10 bg-nbpurple rounded-xl flex items-center justify-center text-white shrink-0">
-        <i class="fa-solid fa-clipboard-plus"></i>
+        <i class="fa-solid fa-list-ol"></i>
       </div>
       <span class="text-sm font-bold">Tambah Tugas</span>
     </button>

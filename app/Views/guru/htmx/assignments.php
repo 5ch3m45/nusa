@@ -59,7 +59,7 @@
 
 <!-- FAB -->
 <button onclick="document.getElementById('addModal').classList.remove('hidden')" class="fixed right-4 w-14 h-14 bg-nbgreen text-white rounded-2xl shadow-nblg flex items-center justify-center text-xl z-30 active:scale-90 transition" style="bottom: calc(env(safe-area-inset-bottom, 0px) + 6rem);">
-  <i class="fa-solid fa-clipboard-plus"></i>
+  <i class="fa-solid fa-list-ol"></i>
 </button>
 
 <!-- Add Modal -->
