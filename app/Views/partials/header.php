@@ -11,7 +11,7 @@
     </div>
     <div class="flex items-center gap-1.5 bg-nbyellow/30 nb-pill px-3 py-1.5 text-sm shrink-0">
       <i class="fa-solid fa-star text-nborange"></i>
-      <span id="totalStarsCount">12</span>
+      <span id="totalStarsCount"><?= esc($profile['stats']['stars'] ?? 0) ?></span>
     </div>
   </div>
 </header>

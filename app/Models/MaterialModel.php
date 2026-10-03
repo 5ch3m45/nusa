@@ -58,6 +58,35 @@ class MaterialModel extends Model
         return $this->where('book_id', $bookId)->findAll();
     }
 
+    public function getByClassAndSemester(string $class, int $semester, ?int $studentId = null)
+    {
+        $select = 'materials.*';
+        if ($studentId !== null) {
+            $select .= ', student_material_progress.is_done, student_material_progress.score, student_material_progress.started_at, student_material_progress.done_at, student_material_progress.last_accessed_at';
+        }
+
+        $builder = $this->db->table('materials')
+            ->select($select)
+            ->where('materials.class', $class)
+            ->where('materials.semester', $semester)
+            ->orderBy('materials.id', 'ASC');
+
+        if ($studentId !== null) {
+            $builder->join(
+                'student_material_progress',
+                'student_material_progress.material_id = materials.id AND student_material_progress.student_id = ' . (int) $studentId,
+                'left'
+            );
+        }
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function findForStudentClass(int $id, string $class)
+    {
+        return $this->where('id', $id)->where('class', $class)->first();
+    }
+
     public function getMaterialsWithBook(int $guruId)
     {
         return $this->db->table('materials')

@@ -440,8 +440,10 @@ let currentAssessmentSubject = 'ipas';
 let currentQuizIndex = 0;
 let userQuizAnswers = { ipas: [], bindo: [] };
 let quizScores = { ipas: 90, bindo: 95 };
-let studentName = "Ahmad Rizky";
-let totalStars = 12;
+let studentName = <?= json_encode($profile['name'] ?? 'Ahmad Rizky') ?>;
+let totalStars = <?= (int)($profile['stats']['stars'] ?? 12) ?>;
+let totalMissions = <?= (int)($profile['stats']['missions'] ?? 8) ?>;
+let totalAverage = <?= (int)($profile['stats']['average'] ?? 92) ?>;
 let isSpeaking = false;
 
 const mainTabs = { home: 'nbblue', missions: 'nbgreen', achievements: 'nborange', profile: 'nbpurple' };
@@ -480,15 +482,6 @@ function startSession(name, silent) {
   if (!silent) showToast(`Selamat datang, ${name}!`, 'success');
 }
 
-function logout() {
-  LS.del('jn_session');
-  stopSpeech();
-  document.getElementById('loginName').value = '';
-  document.getElementById('loginPin').value = '';
-  document.getElementById('loginError').innerText = '';
-//   document.getElementById('loginView').classList.remove('hidden');
-}
-
 function switchMain(tab) {
   currentMain = tab;
   stopSpeech();
@@ -512,13 +505,12 @@ function switchMain(tab) {
 }
 
 function updateStats() {
-  const avg = Math.round((quizScores.ipas + quizScores.bindo) / 2);
   const set = (id, v) => { const e = document.getElementById(id); if (e) e.innerText = v; };
   set('totalStarsCount', totalStars);
   set('homeGreeting', studentName + ' 👋');
   set('homeStars', totalStars);
-  set('homeMissions', chaptersData.length);
-  set('homeAvg', avg);
+  set('homeMissions', totalMissions);
+  set('homeAvg', totalAverage);
   set('homeContBab', currentChapter.babNum);
   set('homeContTitle', currentChapter.title);
   set('achStars', totalStars);

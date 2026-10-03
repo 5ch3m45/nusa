@@ -5,13 +5,13 @@
     </div>
     <div>
       <label for="studentNameInput" class="text-[11px] font-extrabold uppercase text-ink/50 block mb-1">Nama Ksatria</label>
-      <input type="text" id="studentNameInput" value="Ahmad Rizky" onchange="updateStudentName(this.value)" class="w-full text-center bg-white/50 nb-border rounded-xl px-3 py-2 text-sm font-bold focus:outline-none focus:border-nbblue">
+      <input type="text" id="studentNameInput" value="<?= esc($profile['name'] ?? 'Siswa') ?>" onchange="updateStudentName(this.value)" class="w-full text-center bg-white/50 nb-border rounded-xl px-3 py-2 text-sm font-bold focus:outline-none focus:border-nbblue">
     </div>
-    <p class="text-xs text-ink/60 font-semibold">Siswa Kelas 4 SD</p>
+    <p class="text-xs text-ink/60 font-semibold">Siswa Kelas <?= esc($profile['class'] ?? '-') ?></p>
   </div>
   <div class="nb-card p-4 text-xs text-ink/60 space-y-1 text-center">
     <p class="font-bold text-ink/80">JELAJAH NUSA &copy; 2026</p>
     <p>Aplikasi Edukasi Integratif Kelas 4 SD &bull; Kurikulum Merdeka</p>
   </div>
-  <button onclick="logout()" class="w-full py-3 bg-white/70 text-nbred nb-btn text-sm"><i class="fa-solid fa-right-from-bracket mr-1"></i> Keluar</button>
+  <a href="/murid/logout" class="block w-full py-3 bg-white/70 text-nbred nb-btn text-sm text-center"><i class="fa-solid fa-right-from-bracket mr-1"></i> Keluar</a>
 </div>

@@ -80,6 +80,12 @@ $routes->get('murid/logout', 'AuthController::studentLogout');
 $routes->group('murid', ['filter' => 'studentAuth'], function ($routes) {
     $routes->get('/', 'Home::index');
     $routes->get('missions', 'MissionController::index');
+    $routes->get('missions/semester/(:num)', 'MissionController::semester/$1');
+    $routes->get('missions/(:num)', 'MissionController::detail/$1');
+    $routes->get('missions/(:num)/book', 'MissionController::book/$1');
+    $routes->get('missions/(:num)/material', 'MissionController::material/$1');
+    $routes->get('missions/(:num)/assignment', 'MissionController::assignment/$1');
+    $routes->post('missions/(:num)/complete', 'MissionController::complete/$1');
     $routes->get('achievements', 'AchievementController::index');
     $routes->get('profile', 'ProfileController::index');
 
@@ -87,6 +93,9 @@ $routes->group('murid', ['filter' => 'studentAuth'], function ($routes) {
         $routes->get('home', 'Htmx\HomeController::index');
         $routes->get('missions', 'Htmx\MissionController::index');
         $routes->get('missions/semester/(:num)', 'Htmx\MissionController::semester/$1');
+        $routes->get('missions/(:num)/book', 'Htmx\MissionController::book/$1');
+        $routes->get('missions/(:num)/material', 'Htmx\MissionController::material/$1');
+        $routes->get('missions/(:num)/assignment', 'Htmx\MissionController::assignment/$1');
         $routes->get('achievements', 'Htmx\AchievementController::index');
         $routes->get('profile', 'Htmx\ProfileController::index');
     });

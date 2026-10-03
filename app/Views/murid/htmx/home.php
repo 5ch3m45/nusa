@@ -21,12 +21,25 @@
       <p class="text-[11px] font-semibold text-ink/50">Rata-rata</p>
     </div>
   </div>
-  <div>
+  <div id="continueLearning">
     <h3 class="font-display text-base font-bold mb-2">Lanjutkan Belajar</h3>
     <div class="nb-card p-4 space-y-3">
-      <span id="homeContBab" class="text-[11px] font-extrabold bg-nbgreen text-white nb-pill px-2.5 py-1 inline-block">Bab <?= esc($profile['latest_progress']['mission']['chapter'] ?? 'Bab 1') ?></span>
-      <h4 id="homeContTitle" class="font-display font-bold text-sm leading-snug"><?= esc($profile['latest_progress']['mission']['title'] ?? 'Judul') ?></h4>
-      <button onclick="openChapter(currentChapter.id)" class="w-full py-2.5 bg-nbgreen text-white nb-btn text-xs">Lanjutkan <i class="fa-solid fa-arrow-right ml-1"></i></button>
+      <?php if (!empty($profile['latest_progress'])): ?>
+        <?php $lp = $profile['latest_progress']; ?>
+        <span id="homeContBab" class="text-[11px] font-extrabold <?= $lp['is_done'] ? 'bg-ink/20 text-ink/70' : 'bg-nbgreen text-white' ?> nb-pill px-2.5 py-1 inline-block"><?= esc($lp['material']['chapter'] ?? 'Bab 1') ?></span>
+        <h4 id="homeContTitle" class="font-display font-bold text-sm leading-snug"><?= esc($lp['material']['title'] ?? '') ?></h4>
+        <p class="text-[11px] font-semibold text-ink/50">
+          <?php if ($lp['is_done']): ?>
+            <i class="fa-solid fa-circle-check text-nbgreen mr-1"></i>Selesai<?= !empty($lp['done_at']) ? ' · ' . esc(date('d M Y', strtotime($lp['done_at']))) : '' ?><?= ($lp['score'] ?? null) !== null ? ' · Nilai ' . esc($lp['score']) : '' ?>
+          <?php else: ?>
+            <i class="fa-solid fa-book-open text-nbblue mr-1"></i>Sedang dipelajari<?= !empty($lp['started_at']) ? ' · mulai ' . esc(date('d M Y', strtotime($lp['started_at']))) : '' ?>
+          <?php endif; ?>
+        </p>
+        <a href="/murid/missions" class="w-full py-2.5 bg-nbgreen text-white nb-btn text-xs text-center block">Lanjutkan <i class="fa-solid fa-arrow-right ml-1"></i></a>
+      <?php else: ?>
+        <p class="text-xs text-ink/50 font-semibold">Belum ada materi yang dipelajari.</p>
+        <a href="/murid/missions" class="w-full py-2.5 bg-nbgreen text-white nb-btn text-xs text-center block">Mulai Belajar <i class="fa-solid fa-arrow-right ml-1"></i></a>
+      <?php endif; ?>
     </div>
   </div>
   <button hx-get="/murid/htmx/missions" 

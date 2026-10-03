@@ -2,18 +2,32 @@
 
 namespace App\Services;
 
+use App\Models\GradeModel;
+use App\Models\StudentModel;
+
 class UserService
 {
     public function getUserProfile()
     {
-        // Simulate fetching user profile data from a database or API
+        $studentId = session()->get('student_id');
+
+        $student = $studentId ? (new StudentModel())->find($studentId) : null;
+        $grades  = $studentId ? (new GradeModel())->getByStudent($studentId) : [];
+
+        $scores  = array_column($grades, 'score');
+        $average = $scores ? array_sum($scores) / count($scores) : 0;
+
         return [
-            'name' => 'John Doe',
-            'email' => 'john.doe@example.com',
-            'class' => 1,
-            'stats' => (new StatsService())->getStatsByUserId(1),
-            'latest_progress' => (new ProgressService())->getTheLatestProgressByUserId(1)
+            'name'  => $student['name'] ?? session()->get('student_name') ?? 'Siswa',
+            'email' => '',
+            'class' => $student['class'] ?? session()->get('student_class') ?? 1,
+            'stats' => [
+                'stars'    => (int) round($average),
+                'missions' => count($grades),
+                'average'  => (int) round($average),
+            ],
+            'latest_progress' => (new ProgressService())->getTheLatestProgressByUserId($studentId ?? 0),
         ];
     }
-    
+
 }
