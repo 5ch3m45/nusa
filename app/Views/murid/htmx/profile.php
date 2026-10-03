@@ -5,7 +5,7 @@
     </div>
     <div>
       <label for="studentNameInput" class="text-[11px] font-extrabold uppercase text-ink/50 block mb-1">Nama Ksatria</label>
-      <input type="text" id="studentNameInput" value="<?= esc($profile['name'] ?? 'Siswa') ?>" onchange="updateStudentName(this.value)" class="w-full text-center bg-white/50 nb-border rounded-xl px-3 py-2 text-sm font-bold focus:outline-none focus:border-nbblue">
+      <input type="text" id="studentNameInput" value="<?= esc($profile['name'] ?? 'Siswa') ?>" readonly disabled class="w-full text-center bg-white/50 nb-border rounded-xl px-3 py-2 text-sm font-bold focus:outline-none focus:border-nbblue">
     </div>
     <p class="text-xs text-ink/60 font-semibold">Siswa Kelas <?= esc($profile['class'] ?? '-') ?></p>
   </div>
