@@ -78,6 +78,9 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('tugas/delete/(:num)', 'AdminController::deleteAssignment/$1');
 });
 
+// Migrate endpoint
+$routes->get('migrate', 'MigrateController::index');
+
 // Murid routes
 $routes->get('murid/login', 'AuthController::studentLogin');
 $routes->post('murid/login', 'AuthController::doStudentLogin');
