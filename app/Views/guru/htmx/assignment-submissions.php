@@ -8,7 +8,26 @@
   </div>
 </div>
 
-<div class="space-y-3">
+<!-- Detail Tugas (readonly) -->
+<div class="nb-card p-4 mb-4 space-y-1.5">
+  <h3 class="font-bold text-sm"><?= esc($assignment['title']) ?></h3>
+  <p class="text-[11px] text-ink/50"><?= esc($assignment['subject']) ?> &bull; Kelas <?= esc($assignment['class']) ?> &bull; Semester <?= esc($assignment['semester']) ?></p>
+  <p class="text-[11px] text-ink/50">
+    <i class="fa-solid fa-tag mr-1"></i>Tipe: <?= ($assignment['type'] ?? 'upload') === 'quiz' ? 'Kuis Pilihan Ganda' : 'Upload File' ?>
+    &bull; <i class="fa-regular fa-calendar mr-1"></i>Deadline: <?= date('d M Y', strtotime($assignment['due_date'])) ?>
+  </p>
+  <?php if (!empty($assignment['book_title'])): ?>
+    <p class="text-[11px] text-nbblue font-semibold"><i class="fa-solid fa-book mr-1"></i><?= esc($assignment['book_title']) ?></p>
+  <?php endif; ?>
+  <?php if (!empty($assignment['material_title'])): ?>
+    <p class="text-[11px] text-nbgreen font-semibold"><i class="fa-solid fa-file-lines mr-1"></i><?= esc($assignment['material_title']) ?></p>
+  <?php endif; ?>
+  <?php if (!empty($assignment['description'])): ?>
+    <p class="text-[11px] text-ink/60 leading-relaxed"><?= esc($assignment['description']) ?></p>
+  <?php endif; ?>
+</div>
+
+<div id="submissions" class="space-y-3">
   <?php if (empty($submissions)): ?>
     <div class="nb-card p-8 text-center text-ink/40 text-sm">
       <i class="fa-solid fa-inbox text-3xl mb-2"></i>

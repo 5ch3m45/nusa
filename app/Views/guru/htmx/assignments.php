@@ -23,7 +23,7 @@
     </div>
   <?php else: ?>
     <?php foreach ($assignments as $a): ?>
-      <div class="nb-card p-4">
+      <div id="assignment-<?= $a['id'] ?>" hx-get="/guru/tugas/<?= $a['id'] ?>/submissions" hx-push-url="/guru/tugas/<?= $a['id'] ?>/submissions" hx-swap="innerHTML show:top" hx-target="#guru-content" class="nb-card p-4 cursor-pointer">
         <div class="flex items-start gap-3">
           <div class="w-11 h-11 bg-nbpurple/15 text-nbpurple rounded-xl flex items-center justify-center shrink-0">
             <i class="fa-solid fa-clipboard-list text-lg"></i>
@@ -44,13 +44,13 @@
             <?php endif; ?>
           </div>
           <div class="flex gap-2 shrink-0">
-            <button hx-get="/guru/tugas/edit/<?= $a['id'] ?>" hx-push-url="/guru/tugas/edit/<?= $a['id'] ?>" hx-swap="innerHTML show:top" hx-target="#guru-content" class="w-9 h-9 bg-nbblue/10 text-nbblue rounded-xl flex items-center justify-center active:bg-nbblue active:text-white transition">
+            <button hx-get="/guru/tugas/edit/<?= $a['id'] ?>" hx-push-url="/guru/tugas/edit/<?= $a['id'] ?>" hx-swap="innerHTML show:top" hx-target="#guru-content" onclick="event.stopPropagation()" class="w-9 h-9 bg-nbblue/10 text-nbblue rounded-xl flex items-center justify-center active:bg-nbblue active:text-white transition">
               <i class="fa-solid fa-pen text-xs"></i>
             </button>
-            <button hx-get="/guru/tugas/<?= $a['id'] ?>/submissions" hx-push-url="/guru/tugas/<?= $a['id'] ?>/submissions" hx-swap="innerHTML show:top" hx-target="#guru-content" class="w-9 h-9 bg-nborange/10 text-nborange rounded-xl flex items-center justify-center active:bg-nborange active:text-white transition" title="Lihat upload murid">
+            <button hx-get="/guru/tugas/<?= $a['id'] ?>/submissions" hx-push-url="/guru/tugas/<?= $a['id'] ?>/submissions" hx-swap="innerHTML show:top" hx-target="#guru-content" onclick="event.stopPropagation()" class="w-9 h-9 bg-nborange/10 text-nborange rounded-xl flex items-center justify-center active:bg-nborange active:text-white transition" title="Lihat upload murid">
               <i class="fa-solid fa-list-check text-xs"></i>
             </button>
-            <a href="/guru/tugas/delete/<?= $a['id'] ?>" onclick="return confirm('Hapus tugas ini?')" class="w-9 h-9 bg-nbred/10 text-nbred rounded-xl flex items-center justify-center active:bg-nbred active:text-white transition">
+            <a href="/guru/tugas/delete/<?= $a['id'] ?>" onclick="event.stopPropagation(); return confirm('Hapus tugas ini?')" class="w-9 h-9 bg-nbred/10 text-nbred rounded-xl flex items-center justify-center active:bg-nbred active:text-white transition">
               <i class="fa-solid fa-trash text-xs"></i>
             </a>
           </div>

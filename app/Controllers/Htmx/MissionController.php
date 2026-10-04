@@ -74,6 +74,7 @@ class MissionController extends BaseController
             ),
             'quizQuestions' => (function () use ($materialId) {
                 $rows = \Config\Database::connect()->table('assignment_questions')
+                    ->select('assignment_questions.*')
                     ->join('assignments', 'assignments.id = assignment_questions.assignment_id')
                     ->where('assignments.material_id', $materialId)
                     ->orderBy('assignment_questions.order', 'ASC')

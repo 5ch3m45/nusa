@@ -826,7 +826,13 @@ class GuruController extends BaseController
 
     public function assignmentSubmissions($id)
     {
-        $assignment = $this->assignmentModel->find($id);
+        $assignment = \Config\Database::connect()->table('assignments')
+            ->select('assignments.*, books.title as book_title, materials.title as material_title')
+            ->join('books', 'books.id = assignments.book_id', 'left')
+            ->join('materials', 'materials.id = assignments.material_id', 'left')
+            ->where('assignments.id', $id)
+            ->get()->getRowArray();
+
         if (!$assignment || $assignment['guru_id'] != $this->getGuruId()) {
             return redirect()->to('/guru/tugas')->with('error', 'Tugas tidak ditemukan.');
         }

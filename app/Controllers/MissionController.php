@@ -101,7 +101,18 @@ class MissionController extends BaseController
             throw PageNotFoundException::forPageNotFound();
         }
 
+        // Tolak edit jika deadline sudah lewat atau jawaban sudah dikunci
+        if (!empty($assignment['due_date']) && date('Y-m-d') > $assignment['due_date']) {
+            return redirect()->to('/murid/missions/' . $assignment['material_id'] . '/assignment')
+                ->with('error', 'Batas waktu pengerjaan sudah lewat. Jawaban tidak bisa diubah.');
+        }
+
         $studentId = session()->get('student_id');
+        $existing = (new SubmissionModel())->getByAssignmentAndStudent($assignmentId, $studentId);
+        if ($existing && !empty($existing['answers_locked'])) {
+            return redirect()->to('/murid/missions/' . $assignment['material_id'] . '/assignment')
+                ->with('error', 'Jawaban sudah dikunci. Tidak bisa diubah.');
+        }
         $questions = \Config\Database::connect()->table('assignment_questions')
             ->where('assignment_id', $assignmentId)
             ->orderBy('order', 'ASC')
@@ -141,13 +152,32 @@ class MissionController extends BaseController
             ->with('success', 'Kuis selesai! Nilai: ' . $score);
     }
 
+    public function lockQuiz($assignmentId)
+    {
+        $assignment = (new AssignmentModel())->find((int) $assignmentId);
+        if (!$assignment) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $studentId = session()->get('student_id');
+        $submissionModel = new SubmissionModel();
+        $existing = $submissionModel->getByAssignmentAndStudent((int) $assignmentId, $studentId);
+
+        if ($existing) {
+            $submissionModel->update($existing['id'], ['answers_locked' => 1]);
+        }
+
+        return redirect()->to('/murid/missions/' . $assignment['material_id'] . '/assignment')
+            ->with('success', 'Jawaban berhasil dikunci.');
+    }
+
     public function certificate($submissionId)
     {
         $submissionId = (int) $submissionId;
         $studentId = session()->get('student_id');
 
         $data = \Config\Database::connect()->table('submissions')
-            ->select('submissions.*, submissions.updated_at as graded_at, students.name as student_name, students.class as student_class, assignments.title as assignment_title, assignments.subject, assignments.class as assignment_class, users.name as guru_name, books.title as book_title, materials.title as material_title')
+            ->select('submissions.*, submissions.updated_at as graded_at, students.name as student_name, students.class as student_class, assignments.title as assignment_title, assignments.subject, assignments.class as assignment_class, assignments.due_date, assignments.book_id, assignments.material_id, users.name as guru_name, books.title as book_title, materials.title as material_title')
             ->join('assignments', 'assignments.id = submissions.assignment_id')
             ->join('students', 'students.id = submissions.student_id')
             ->join('users', 'users.id = assignments.guru_id', 'left')
@@ -159,6 +189,14 @@ class MissionController extends BaseController
             ->getRowArray();
 
         if (!$data || $data['score'] === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        // Piagam hanya jika sudah dikunci atau deadline sudah lewat
+        $locked = !empty($data['answers_locked'])
+            || (!empty($data['due_date']) && !empty($data['due_date']) && date('Y-m-d') > $data['due_date']);
+
+        if (!$locked) {
             throw PageNotFoundException::forPageNotFound();
         }
 
@@ -204,6 +242,7 @@ class MissionController extends BaseController
             ),
             'quizQuestions' => (function () use ($materialId) {
                 $rows = \Config\Database::connect()->table('assignment_questions')
+                    ->select('assignment_questions.*')
                     ->join('assignments', 'assignments.id = assignment_questions.assignment_id')
                     ->where('assignments.material_id', $materialId)
                     ->orderBy('assignment_questions.order', 'ASC')

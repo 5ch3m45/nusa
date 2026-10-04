@@ -23,7 +23,10 @@
 
         <?php if ($isQuiz): ?>
           <?php $questions = $quizQuestions[$assignment['id']] ?? []; ?>
-          <?php if ($sub && $sub['score'] !== null): ?>
+          <?php $pastDeadline = !empty($assignment['due_date']) && date('Y-m-d') > $assignment['due_date']; ?>
+          <?php $savedAnswers = $sub ? (json_decode($sub['answer'] ?? '[]', true) ?? []) : []; ?>
+          <?php $locked = $sub && (!empty($sub['answers_locked']) || $pastDeadline); ?>
+          <?php if ($sub && $sub['score'] !== null && $locked): ?>
             <div class="mt-1 p-2.5 bg-nbgreen/10 rounded-xl">
               <p class="text-[11px] font-bold text-nbgreen"><i class="fa-solid fa-star mr-1"></i>Nilai: <?= esc($sub['score']) ?></p>
               <p class="text-[11px] text-ink/60 italic mt-0.5">"<?= esc($sub['feedback'] ?? '') ?>"</p>
@@ -31,25 +34,47 @@
             <a href="/murid/sertifikat/<?= $sub['id'] ?>" target="_blank" class="block w-full py-2.5 mt-1 bg-nbyellow text-ink rounded-xl text-[11px] font-bold text-center nb-btn">
               <i class="fa-solid fa-award mr-1"></i> Unduh Piagam
             </a>
-          <?php elseif (!empty($questions)): ?>
-            <form action="/murid/assignments/<?= $assignment['id'] ?>/quiz" method="post" class="space-y-3 pt-2">
-              <?php foreach ($questions as $i => $q): ?>
-                <div class="nb-border rounded-xl p-3 space-y-2">
-                  <p class="text-[11px] font-bold text-ink"><?= ($i + 1) ?>. <?= esc($q['question']) ?></p>
-                  <?php foreach (['a' => 'option_a', 'b' => 'option_b', 'c' => 'option_c', 'd' => 'option_d'] as $key => $opt): ?>
-                    <label class="flex items-center gap-2 text-[11px] text-ink/70 cursor-pointer">
-                      <input type="radio" name="answers[<?= $q['id'] ?>]" value="<?= $key ?>" required class="accent-nbblue">
-                      <span><?= strtoupper($key) ?>. <?= esc($q[$opt]) ?></span>
-                    </label>
-                  <?php endforeach; ?>
-                </div>
-              <?php endforeach; ?>
-              <button type="submit" class="w-full py-2.5 bg-nbblue text-white rounded-xl text-[11px] font-bold nb-btn">
-                Kumpulkan Jawaban
+          <?php endif; ?>
+
+          <?php if ($sub && !$locked): ?>
+            <div class="mt-1 p-2.5 bg-nbblue/10 rounded-xl">
+              <p class="text-[11px] font-bold text-nbblue"><i class="fa-solid fa-hourglass-half mr-1"></i>Jawaban sudah dikumpulkan. Kunci jawaban untuk melihat nilai.</p>
+            </div>
+            <button type="button" onclick="document.getElementById('quizEdit-<?= $assignment['id'] ?>').classList.toggle('hidden')" class="w-full py-2.5 mt-1 bg-nbblue/10 text-nbblue rounded-xl text-[11px] font-bold nb-btn">
+              <i class="fa-solid fa-pen mr-1"></i> Edit Jawaban
+            </button>
+            <form action="/murid/assignments/<?= $assignment['id'] ?>/quiz/lock" method="post">
+              <button type="submit" class="w-full py-2.5 mt-1 bg-nborange/10 text-nborange rounded-xl text-[11px] font-bold nb-btn">
+                <i class="fa-solid fa-lock mr-1"></i> Kunci Jawaban
               </button>
             </form>
-          <?php else: ?>
-            <p class="text-[11px] text-ink/40">Belum ada soal untuk tugas ini.</p>
+          <?php elseif ($sub && $locked && $pastDeadline): ?>
+            <p class="text-[11px] text-ink/40 mt-1">Deadline sudah lewat, jawaban terkunci.</p>
+          <?php endif; ?>
+
+          <?php if (!$sub || ($sub && !$locked && !$pastDeadline)): ?>
+            <div id="<?= $sub ? 'quizEdit-' . $assignment['id'] : '' ?>" class="<?= $sub ? 'hidden' : '' ?>">
+              <?php if (!empty($questions)): ?>
+                <form action="/murid/assignments/<?= $assignment['id'] ?>/quiz" method="post" class="space-y-3 pt-2">
+                  <?php foreach ($questions as $i => $q): ?>
+                    <div class="nb-border rounded-xl p-3 space-y-2">
+                      <p class="text-[11px] font-bold text-ink"><?= ($i + 1) ?>. <?= esc($q['question']) ?></p>
+                      <?php foreach (['a' => 'option_a', 'b' => 'option_b', 'c' => 'option_c', 'd' => 'option_d'] as $key => $opt): ?>
+                        <label class="flex items-center gap-2 text-[11px] text-ink/70 cursor-pointer">
+                          <input type="radio" name="answers[<?= $q['id'] ?>]" value="<?= $key ?>" <?= ($savedAnswers[$q['id']] ?? '') === $key ? 'checked' : '' ?> class="accent-nbblue">
+                          <span><?= strtoupper($key) ?>. <?= esc($q[$opt]) ?></span>
+                        </label>
+                      <?php endforeach; ?>
+                    </div>
+                  <?php endforeach; ?>
+                  <button type="submit" class="w-full py-2.5 bg-nbblue text-white rounded-xl text-[11px] font-bold nb-btn">
+                    <?= $sub ? 'Perbarui Jawaban' : 'Kumpulkan Jawaban' ?>
+                  </button>
+                </form>
+              <?php else: ?>
+                <p class="text-[11px] text-ink/40">Belum ada soal untuk tugas ini.</p>
+              <?php endif; ?>
+            </div>
           <?php endif; ?>
         <?php else: ?>
         <?php if ($sub): ?>
