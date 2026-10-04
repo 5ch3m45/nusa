@@ -513,7 +513,6 @@ function updateStats() {
   set('homeAvg', totalAverage);
   set('homeContBab', currentChapter.babNum);
   set('homeContTitle', currentChapter.title);
-  set('achStars', totalStars);
   set('achIpas', quizScores.ipas);
   set('achIpasPred', getPredicate(quizScores.ipas));
   set('achBindo', quizScores.bindo);
