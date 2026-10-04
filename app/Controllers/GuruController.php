@@ -11,6 +11,7 @@ use App\Models\BookStoreModel;
 use App\Models\BookStoreMaterialModel;
 use App\Models\BookStoreAssignmentModel;
 use App\Models\UserModel;
+use App\Models\SubmaterialModel;
 
 class GuruController extends BaseController
 {
@@ -23,6 +24,7 @@ class GuruController extends BaseController
     protected $bookStoreMaterialModel;
     protected $bookStoreAssignmentModel;
     protected $userModel;
+    protected $submaterialModel;
 
     public function __construct()
     {
@@ -35,6 +37,7 @@ class GuruController extends BaseController
         $this->bookStoreMaterialModel = new BookStoreMaterialModel();
         $this->bookStoreAssignmentModel = new BookStoreAssignmentModel();
         $this->userModel = new UserModel();
+        $this->submaterialModel = new SubmaterialModel();
     }
 
     protected function getGuruId()
@@ -602,13 +605,14 @@ class GuruController extends BaseController
         }
 
         $books = $this->bookModel->getByGuru($this->getGuruId());
+        $submaterials = $this->submaterialModel->getByMaterial($id);
 
         $isHtmx = ($_SERVER['HTTP_HX_REQUEST'] ?? '') === 'true';
         if ($isHtmx) {
-            return view('guru/htmx/material-edit', ['material' => $material, 'books' => $books]);
+            return view('guru/htmx/material-edit', ['material' => $material, 'books' => $books, 'submaterials' => $submaterials]);
         }
 
-        return view('guru/material-edit', ['material' => $material, 'books' => $books]);
+        return view('guru/material-edit', ['material' => $material, 'books' => $books, 'submaterials' => $submaterials]);
     }
 
     public function updateMaterial($id)
@@ -631,6 +635,68 @@ class GuruController extends BaseController
     {
         $this->materialModel->delete($id);
         return redirect()->to('/guru/materi')->with('success', 'Materi berhasil dihapus.');
+    }
+
+    public function addSubmaterial($materialId)
+    {
+        $material = $this->materialModel->find($materialId);
+        if (!$material || $material['guru_id'] != $this->getGuruId()) {
+            return redirect()->to('/guru/materi')->with('error', 'Materi tidak ditemukan.');
+        }
+
+        $type  = (string) ($this->request->getPost('type') ?? '');
+        $title = trim((string) ($this->request->getPost('title') ?? ''));
+
+        if (!in_array($type, ['text', 'youtube', 'pdf', 'slides', 'mp3'], true)) {
+            return redirect()->to('/guru/materi/edit/' . $materialId)->with('error', 'Tipe submateri tidak valid.');
+        }
+        if ($title === '') {
+            return redirect()->to('/guru/materi/edit/' . $materialId)->with('error', 'Judul submateri wajib diisi.');
+        }
+
+        $content = null;
+        $url     = null;
+        if ($type === 'text') {
+            $content = $this->request->getPost('content');
+        } else {
+            $url = trim((string) ($this->request->getPost('url') ?? ''));
+            if ($url === '') {
+                return redirect()->to('/guru/materi/edit/' . $materialId)->with('error', 'URL submateri wajib diisi.');
+            }
+        }
+
+        $sortOrder = (int) ($this->request->getPost('sort_order') ?? 0);
+        if ($sortOrder <= 0) {
+            $existing = $this->submaterialModel->where('material_id', $materialId)->findAll();
+            $sortOrder = $existing ? max(array_column($existing, 'sort_order')) + 1 : 1;
+        }
+
+        $this->submaterialModel->insert([
+            'material_id' => (int) $materialId,
+            'type'        => $type,
+            'title'       => $title,
+            'content'     => $content,
+            'url'         => $url,
+            'sort_order'  => $sortOrder,
+        ]);
+
+        return redirect()->to('/guru/materi/edit/' . $materialId)->with('success', 'Submateri berhasil ditambahkan.');
+    }
+
+    public function deleteSubmaterial($id)
+    {
+        $sub = $this->submaterialModel->find($id);
+        if (!$sub) {
+            return redirect()->to('/guru/materi')->with('error', 'Submateri tidak ditemukan.');
+        }
+
+        $material = $this->materialModel->find($sub['material_id']);
+        if (!$material || $material['guru_id'] != $this->getGuruId()) {
+            return redirect()->to('/guru/materi')->with('error', 'Submateri tidak ditemukan.');
+        }
+
+        $this->submaterialModel->delete($id);
+        return redirect()->to('/guru/materi/edit/' . $sub['material_id'])->with('success', 'Submateri berhasil dihapus.');
     }
 
     // ==================== ASSIGNMENTS ====================
@@ -696,6 +762,19 @@ class GuruController extends BaseController
         return redirect()->to('/guru/tugas')->with('success', 'Tugas berhasil ditambahkan.');
     }
 
+    public function addAssignmentForm()
+    {
+        $books     = $this->bookModel->getByGuru($this->getGuruId());
+        $materials = $this->materialModel->getByGuru($this->getGuruId());
+
+        $isHtmx = ($_SERVER['HTTP_HX_REQUEST'] ?? '') === 'true';
+        if ($isHtmx) {
+            return view('guru/htmx/assignment-add', ['books' => $books, 'materials' => $materials]);
+        }
+
+        return view('guru/assignment-add', ['books' => $books, 'materials' => $materials]);
+    }
+
     public function editAssignmentForm($id)
     {
         $assignment = $this->assignmentModel->find($id);
@@ -712,6 +791,78 @@ class GuruController extends BaseController
         }
 
         return view('guru/assignment-edit', ['assignment' => $assignment, 'books' => $books, 'materials' => $materials]);
+    }
+
+    public function assignmentSubmissions($id)
+    {
+        $assignment = $this->assignmentModel->find($id);
+        if (!$assignment || $assignment['guru_id'] != $this->getGuruId()) {
+            return redirect()->to('/guru/tugas')->with('error', 'Tugas tidak ditemukan.');
+        }
+
+        $submissions = \Config\Database::connect()->table('submissions')
+            ->select('submissions.*, students.name as student_name, students.class')
+            ->join('students', 'students.id = submissions.student_id')
+            ->where('submissions.assignment_id', $id)
+            ->orderBy('submissions.created_at', 'DESC')
+            ->get()
+            ->getResultArray();
+
+        $isHtmx = ($_SERVER['HTTP_HX_REQUEST'] ?? '') === 'true';
+        if ($isHtmx) {
+            return view('guru/htmx/assignment-submissions', ['assignment' => $assignment, 'submissions' => $submissions]);
+        }
+
+        return view('guru/assignment-submissions', ['assignment' => $assignment, 'submissions' => $submissions]);
+    }
+
+    public function submissionDetail($assignmentId, $submissionId)
+    {
+        $assignment = $this->assignmentModel->find($assignmentId);
+        if (!$assignment || $assignment['guru_id'] != $this->getGuruId()) {
+            return redirect()->to('/guru/tugas')->with('error', 'Tugas tidak ditemukan.');
+        }
+
+        $submission = \Config\Database::connect()->table('submissions')
+            ->select('submissions.*, students.name as student_name, students.class')
+            ->join('students', 'students.id = submissions.student_id')
+            ->where('submissions.id', $submissionId)
+            ->where('submissions.assignment_id', $assignmentId)
+            ->get()
+            ->getRowArray();
+
+        if (!$submission) {
+            return redirect()->to('/guru/tugas/' . $assignmentId . '/submissions')->with('error', 'Submission tidak ditemukan.');
+        }
+
+        $isHtmx = ($_SERVER['HTTP_HX_REQUEST'] ?? '') === 'true';
+        if ($isHtmx) {
+            return view('guru/htmx/submission-detail', ['assignment' => $assignment, 'submission' => $submission]);
+        }
+
+        return view('guru/submission-detail', ['assignment' => $assignment, 'submission' => $submission]);
+    }
+
+    public function gradeSubmission($assignmentId, $submissionId)
+    {
+        $assignment = $this->assignmentModel->find($assignmentId);
+        if (!$assignment || $assignment['guru_id'] != $this->getGuruId()) {
+            return redirect()->to('/guru/tugas')->with('error', 'Tugas tidak ditemukan.');
+        }
+
+        $submissionModel = new \App\Models\SubmissionModel();
+        $submission = $submissionModel->where('assignment_id', $assignmentId)->find($submissionId);
+        if (!$submission) {
+            return redirect()->to('/guru/tugas/' . $assignmentId . '/submissions')->with('error', 'Submission tidak ditemukan.');
+        }
+
+        $submissionModel->update($submissionId, [
+            'score'    => $this->request->getPost('score'),
+            'feedback' => $this->request->getPost('feedback'),
+        ]);
+
+        return redirect()->to('/guru/tugas/' . $assignmentId . '/submissions/' . $submissionId)
+            ->with('success', 'Nilai berhasil disimpan.');
     }
 
     public function updateAssignment($id)

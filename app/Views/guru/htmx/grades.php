@@ -33,6 +33,11 @@
             <p class="text-sm font-bold truncate"><?= esc($g['student_name'] ?? '-') ?></p>
             <p class="text-[11px] text-ink/50"><?= esc($g['assignment_title'] ?? '-') ?></p>
             <p class="text-[11px] text-ink/50"><?= esc($g['subject'] ?? '-') ?> • Kelas <?= esc($g['class'] ?? '-') ?></p>
+            <?php if (!empty($g['file_path'])): ?>
+              <p class="text-[11px] text-nbblue font-semibold mt-1">
+                <i class="fa-solid fa-paperclip mr-1"></i>Jawaban: <a href="/<?= esc($g['file_path']) ?>" target="_blank" class="underline"><?= esc($g['submission_name'] ?? 'lihat file') ?></a>
+              </p>
+            <?php endif; ?>
             <?php if (!empty($g['feedback'])): ?>
               <p class="text-[11px] text-ink/40 mt-1 italic">"<?= esc($g['feedback']) ?>"</p>
             <?php endif; ?>

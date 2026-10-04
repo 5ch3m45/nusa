@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class GradeModel extends Model
+class SubmissionModel extends Model
 {
-    protected $table            = 'grades';
+    protected $table            = 'submissions';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['assignment_id', 'student_id', 'score', 'feedback'];
+    protected $allowedFields    = ['assignment_id', 'student_id', 'file_path', 'original_name', 'note', 'score', 'feedback'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -55,15 +55,21 @@ class GradeModel extends Model
             ->first();
     }
 
-    public function getGradesWithDetails(int $guruId)
+    public function getByStudentForAssignments(int $studentId, array $assignmentIds)
     {
-        return $this->db->table('grades')
-            ->select('grades.*, students.name as student_name, students.class, assignments.title as assignment_title, assignments.subject, submissions.file_path, submissions.original_name as submission_name')
-            ->join('students', 'students.id = grades.student_id')
-            ->join('assignments', 'assignments.id = grades.assignment_id')
-            ->join('submissions', 'submissions.assignment_id = grades.assignment_id AND submissions.student_id = grades.student_id', 'left')
-            ->where('assignments.guru_id', $guruId)
-            ->get()
-            ->getResultArray();
+        if (empty($assignmentIds)) {
+            return [];
+        }
+
+        $rows = $this->where('student_id', $studentId)
+            ->whereIn('assignment_id', $assignmentIds)
+            ->findAll();
+
+        $map = [];
+        foreach ($rows as $row) {
+            $map[$row['assignment_id']] = $row;
+        }
+
+        return $map;
     }
 }

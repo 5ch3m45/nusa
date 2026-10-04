@@ -39,9 +39,7 @@
 <body class="font-sans text-ink min-h-screen bg-gradient-to-b from-[#EAF2FF] via-[#F4F0FF] to-[#FFF1F6] flex items-center justify-center p-4">
   <div class="w-full max-w-md">
     <div class="text-center mb-6">
-      <div class="w-16 h-16 mx-auto bg-gradient-to-br from-nbscarlet to-nbtruered rounded-2xl flex items-center justify-center text-3xl text-white shadow-nb mb-3">
-        <i class="fa-solid fa-compass"></i>
-      </div>
+      <img src="/logo.png" alt="Lentera" class="w-16 h-16 mx-auto rounded-2xl shadow-nb mb-3">
       <h1 class="font-display text-2xl font-bold">LENTERA</h1>
       <p class="text-xs text-ink/60 font-semibold">Masuk untuk mulai petualangan</p>
     </div>

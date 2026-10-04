@@ -7,6 +7,7 @@ use App\Models\AssignmentModel;
 use App\Models\BookModel;
 use App\Models\MaterialModel;
 use App\Models\StudentMaterialProgressModel;
+use App\Models\SubmissionModel;
 use App\Models\SubmaterialModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
@@ -67,6 +68,10 @@ class MissionController extends BaseController
             'material'    => $material,
             'book'        => $material['book_id'] ? (new BookModel())->find($material['book_id']) : null,
             'assignments' => (new AssignmentModel())->getByMaterial($materialId),
+            'submissions' => (new SubmissionModel())->getByStudentForAssignments(
+                session()->get('student_id'),
+                array_column((new AssignmentModel())->getByMaterial($materialId), 'id')
+            ),
             'progress'    => (new StudentMaterialProgressModel())
                 ->where('student_id', session()->get('student_id'))
                 ->where('material_id', $materialId)

@@ -17,6 +17,32 @@
         <?php if (!empty($assignment['description'])): ?>
           <p class="text-[11px] text-ink/60 leading-relaxed"><?= esc($assignment['description']) ?></p>
         <?php endif; ?>
+
+        <?php $sub = $submissions[$assignment['id']] ?? null; ?>
+        <?php if ($sub): ?>
+          <p class="text-[11px] text-nbgreen font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>Sudah dikumpulkan: <a href="/<?= esc($sub['file_path']) ?>" target="_blank" class="underline"><?= esc($sub['original_name']) ?></a></p>
+          <?php if ($sub['score'] !== null): ?>
+            <div class="mt-1 p-2.5 bg-nbgreen/10 rounded-xl">
+              <p class="text-[11px] font-bold text-nbgreen"><i class="fa-solid fa-star mr-1"></i>Nilai: <?= esc($sub['score']) ?></p>
+              <?php if (!empty($sub['feedback'])): ?>
+                <p class="text-[11px] text-ink/60 italic mt-0.5">"<?= esc($sub['feedback']) ?>"</p>
+              <?php endif; ?>
+            </div>
+            <a href="/murid/sertifikat/<?= $sub['id'] ?>" target="_blank" class="block w-full py-2.5 mt-1 bg-nbyellow text-ink rounded-xl text-[11px] font-bold text-center nb-btn">
+              <i class="fa-solid fa-award mr-1"></i> Unduh Piagam
+            </a>
+          <?php else: ?>
+            <p class="text-[11px] text-ink/40">Menunggu penilaian guru.</p>
+          <?php endif; ?>
+        <?php endif; ?>
+
+        <form action="/murid/assignments/<?= $assignment['id'] ?>/submit" method="post" enctype="multipart/form-data" class="space-y-2 pt-1">
+          <input type="file" name="file" required class="w-full text-[11px] text-ink/60 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-nbblue/10 file:text-nbblue file:font-bold file:text-[11px]">
+          <input type="text" name="note" placeholder="Catatan (opsional)" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-[11px] focus:outline-none focus:border-nbblue">
+          <button type="submit" class="w-full py-2.5 bg-nbblue text-white rounded-xl text-[11px] font-bold nb-btn">
+            <?= $sub ? 'Ganti File Tugas' : 'Upload Tugas' ?>
+          </button>
+        </form>
       </div>
     <?php endforeach; ?>
   </div>

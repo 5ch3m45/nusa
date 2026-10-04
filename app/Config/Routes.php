@@ -38,6 +38,8 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
     $routes->post('materi/update/(:num)', 'GuruController::updateMaterial/$1');
     $routes->get('materi/edit/(:num)', 'GuruController::editMaterialForm/$1');
     $routes->get('materi/delete/(:num)', 'GuruController::deleteMaterial/$1');
+    $routes->post('materi/submaterial/(:num)', 'GuruController::addSubmaterial/$1');
+    $routes->get('materi/submaterial/delete/(:num)', 'GuruController::deleteSubmaterial/$1');
     $routes->get('murid', 'GuruController::students');
     $routes->post('murid', 'GuruController::addStudent');
     $routes->post('murid/update/(:num)', 'GuruController::updateStudent/$1');
@@ -46,8 +48,12 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
     $routes->get('murid/reset-password/(:num)', 'GuruController::resetStudentPassword/$1');
     $routes->get('tugas', 'GuruController::assignments');
     $routes->post('tugas', 'GuruController::addAssignment');
+    $routes->get('tugas/tambah', 'GuruController::addAssignmentForm');
     $routes->post('tugas/update/(:num)', 'GuruController::updateAssignment/$1');
     $routes->get('tugas/edit/(:num)', 'GuruController::editAssignmentForm/$1');
+    $routes->get('tugas/(:num)/submissions', 'GuruController::assignmentSubmissions/$1');
+    $routes->get('tugas/(:num)/submissions/(:num)', 'GuruController::submissionDetail/$1/$2');
+    $routes->post('tugas/(:num)/submissions/(:num)/grade', 'GuruController::gradeSubmission/$1/$2');
     $routes->get('tugas/delete/(:num)', 'GuruController::deleteAssignment/$1');
     $routes->get('nilai', 'GuruController::grades');
     $routes->post('nilai', 'GuruController::addGrade');
@@ -86,6 +92,8 @@ $routes->group('murid', ['filter' => 'studentAuth'], function ($routes) {
     $routes->get('missions/(:num)/material', 'MissionController::material/$1');
     $routes->get('missions/(:num)/assignment', 'MissionController::assignment/$1');
     $routes->post('missions/(:num)/complete', 'MissionController::complete/$1');
+    $routes->post('assignments/(:num)/submit', 'MissionController::submitAssignment/$1');
+    $routes->get('sertifikat/(:num)', 'MissionController::certificate/$1');
     $routes->get('achievements', 'AchievementController::index');
     $routes->get('profile', 'ProfileController::index');
 

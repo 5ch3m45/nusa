@@ -1,9 +1,7 @@
 <header class="glass-header shrink-0 z-40" style="padding-top:env(safe-area-inset-top,0px);">
   <div class="px-4 py-3 flex items-center justify-between gap-2">
     <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchMain('home')">
-      <div class="w-10 h-10 bg-nbyellow rounded-2xl flex items-center justify-center text-ink text-lg shrink-0">
-        <i class="fa-solid fa-compass text-red"></i>
-      </div>
+      <img src="/logo.png" alt="Lentera" class="w-10 h-10 rounded-2xl shrink-0">
       <div class="leading-tight">
         <h1 class="font-display text-base font-bold tracking-wide">LENTERA</h1>
         <p class="text-[11px] font-bold text-ink/60">Bahasa & IPAS &bull; Kelas <?= esc($profile['class'] ?? 1) ?></p>
