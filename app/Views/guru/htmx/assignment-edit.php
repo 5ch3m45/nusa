@@ -58,6 +58,37 @@
       <input type="date" name="due_date" value="<?= esc($assignment['due_date']) ?>" required class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue">
     </div>
   </div>
+<?php if (($assignment['type'] ?? 'upload') === 'quiz'): ?>
+<div id="quizBuilder" class="border-t border-ink/10 pt-4 mt-4 space-y-3">
+  <h3 class="font-bold text-sm">Soal Kuis</h3>
+  <div id="questionsContainer" class="space-y-3">
+    <?php $questions = $questions ?? []; ?>
+    <?php if (empty($questions)): ?>
+      <p class="text-xs text-ink/50">Belum ada soal.</p>
+    <?php else: ?>
+      <?php foreach ($questions as $i => $q): ?>
+        <div class="question-item nb-border rounded-xl p-3 space-y-2">
+          <input type="text" name="questions[<?= $i ?>][question]" value="<?= esc($q['question']) ?>" placeholder="Pertanyaan" class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm">
+          <hr>
+          <div class="space-y-2">
+          <input type="text" name="questions[<?= $i ?>][option_a]" value="<?= esc($q['option_a']) ?>" placeholder="A" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">
+          <input type="text" name="questions[<?= $i ?>][option_b]" value="<?= esc($q['option_b']) ?>" placeholder="B" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">
+          <input type="text" name="questions[<?= $i ?>][option_c]" value="<?= esc($q['option_c']) ?>" placeholder="C" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">
+            <input type="text" name="questions[<?= $i ?>][option_d]" value="<?= esc($q['option_d']) ?>" placeholder="D" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">
+        </div>
+          <select name="questions[<?= $i ?>][correct]" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">
+            <?php foreach (['a','b','c','d'] as $opt): ?>
+              <option value="<?= $opt ?>" <?= ($q['correct'] ?? '') === $opt ? 'selected' : '' ?>>Jawaban benar: <?= strtoupper($opt) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+      <?php endforeach; ?>
+    <?php endif; ?>
+  </div>
+  <button type="button" id="addQuestionBtn" class="w-full py-2.5 bg-nbblue/10 text-nbblue rounded-xl text-sm font-bold">+ Tambah Soal</button>
+</div>
+<?php endif; ?>
+
   <button type="submit" class="w-full py-3.5 bg-nbblue text-white rounded-xl text-sm font-bold nb-btn">
     Simpan Perubahan
   </button>
@@ -73,6 +104,41 @@ const booksData = <?= json_encode(array_map(function($b) {
     'semester' => $b['semester'],
   ];
 }, $books)) ?>;
+
+// Add question (edit form)
+let questionIndex = <?= count($questions ?? []) ?>;
+const eAddBtn = document.getElementById('addQuestionBtn');
+if (eAddBtn) {
+  eAddBtn.addEventListener('click', function() {
+    const container = document.getElementById('questionsContainer');
+    const template = container.querySelector('.question-item');
+    if (!template) {
+      const div = document.createElement('div');
+      div.className = 'question-item nb-border rounded-xl p-3 space-y-2';
+      div.innerHTML = '<input type="text" name="questions[' + questionIndex + '][question]" placeholder="Pertanyaan" class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm">' +
+        '<hr>' +
+        '<div class="space-y-2">' +
+        '<input type="text" name="questions[' + questionIndex + '][option_a]" placeholder="A" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">' +
+        '<input type="text" name="questions[' + questionIndex + '][option_b]" placeholder="B" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">' +
+        '<input type="text" name="questions[' + questionIndex + '][option_c]" placeholder="C" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">' +
+        '<input type="text" name="questions[' + questionIndex + '][option_d]" placeholder="D" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">' +
+        '</div>' +
+        '<select name="questions[' + questionIndex + '][correct]" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">' +
+        '<option value="a">Jawaban benar: A</option><option value="b">Jawaban benar: B</option>' +
+        '<option value="c">Jawaban benar: C</option><option value="d">Jawaban benar: D</option></select>';
+      container.appendChild(div);
+    } else {
+      const clone = template.cloneNode(true);
+      clone.querySelectorAll('input, select').forEach(el => {
+        el.name = el.name.replace(/\[\d+\]/, '[' + questionIndex + ']');
+        if (el.tagName === 'INPUT') el.value = '';
+        if (el.tagName === 'SELECT') el.value = 'a';
+      });
+      container.appendChild(clone);
+    }
+    questionIndex++;
+  });
+}
 
 const select = document.getElementById('edit_book_id');
 if (select) {

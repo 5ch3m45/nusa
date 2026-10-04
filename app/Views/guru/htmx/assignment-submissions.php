@@ -24,10 +24,14 @@
           <div class="flex-1 min-w-0">
             <p class="text-sm font-bold truncate"><?= esc($s['student_name']) ?></p>
             <p class="text-[11px] text-ink/50">Kelas <?= esc($s['class']) ?> • <?= date('d M Y H:i', strtotime($s['created_at'])) ?></p>
-            <p class="text-[11px] text-nbblue font-semibold mt-1">
-              <i class="fa-solid fa-paperclip mr-1"></i>
-              <a href="/<?= esc($s['file_path']) ?>" target="_blank" onclick="event.stopPropagation()" class="underline"><?= esc($s['original_name']) ?></a>
-            </p>
+            <?php if (!empty($s['file_path'])): ?>
+              <p class="text-[11px] text-nbblue font-semibold mt-1">
+                <i class="fa-solid fa-paperclip mr-1"></i>
+                <a href="/<?= esc($s['file_path']) ?>" target="_blank" onclick="event.stopPropagation()" class="underline"><?= esc($s['original_name'] ?? 'file') ?></a>
+              </p>
+            <?php elseif (!empty($s['answer'])): ?>
+              <p class="text-[11px] text-nbpurple font-semibold mt-1"><i class="fa-solid fa-list-check mr-1"></i>Tugas Kuis</p>
+            <?php endif; ?>
             <?php if (!empty($s['note'])): ?>
               <p class="text-[11px] text-ink/60 mt-1 italic">"<?= esc($s['note']) ?>"</p>
             <?php endif; ?>

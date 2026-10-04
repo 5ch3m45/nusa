@@ -79,7 +79,42 @@ class MaterialModel extends Model
             );
         }
 
-        return $builder->get()->getResultArray();
+        $materials = $builder->get()->getResultArray();
+
+        if ($studentId !== null && !empty($materials)) {
+            $materialIds = array_column($materials, 'id');
+
+            $assignmentRows = $this->db->table('assignments')
+                ->select('material_id, COUNT(*) as total')
+                ->whereIn('material_id', $materialIds)
+                ->groupBy('material_id')
+                ->get()->getResultArray();
+            $totalMap = [];
+            foreach ($assignmentRows as $r) { $totalMap[$r['material_id']] = (int) $r['total']; }
+
+            $submissionRows = $this->db->table('submissions')
+                ->select('assignments.material_id, COUNT(*) as uploaded, AVG(submissions.score) as avg_score')
+                ->join('assignments', 'assignments.id = submissions.assignment_id')
+                ->where('submissions.student_id', $studentId)
+                ->whereIn('assignments.material_id', $materialIds)
+                ->groupBy('assignments.material_id')
+                ->get()->getResultArray();
+            $submittedMap = [];
+            $avgMap = [];
+            foreach ($submissionRows as $r) {
+                $submittedMap[$r['material_id']] = (int) $r['uploaded'];
+                $avgMap[$r['material_id']] = $r['avg_score'] !== null ? round((float) $r['avg_score'], 1) : null;
+            }
+
+            foreach ($materials as &$m) {
+                $m['total_assignments'] = $totalMap[$m['id']] ?? 0;
+                $m['submitted_count']   = $submittedMap[$m['id']] ?? 0;
+                $m['uploaded_avg_score'] = $avgMap[$m['id']] ?? null;
+            }
+            unset($m);
+        }
+
+        return $materials;
     }
 
     public function findForStudentClass(int $id, string $class)

@@ -12,7 +12,7 @@ class SubmissionModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['assignment_id', 'student_id', 'file_path', 'original_name', 'note', 'score', 'feedback'];
+    protected $allowedFields    = ['assignment_id', 'student_id', 'file_path', 'original_name', 'note', 'score', 'feedback', 'answer'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

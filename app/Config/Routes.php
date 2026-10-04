@@ -96,6 +96,7 @@ $routes->group('murid', ['filter' => 'studentAuth'], function ($routes) {
     $routes->get('missions/(:num)/assignment', 'MissionController::assignment/$1');
     $routes->post('missions/(:num)/complete', 'MissionController::complete/$1');
     $routes->post('assignments/(:num)/submit', 'MissionController::submitAssignment/$1');
+    $routes->post('assignments/(:num)/quiz', 'MissionController::submitQuiz/$1');
     $routes->get('sertifikat/(:num)', 'MissionController::certificate/$1');
     $routes->get('achievements', 'AchievementController::index');
     $routes->get('profile', 'ProfileController::index');

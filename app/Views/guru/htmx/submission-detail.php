@@ -17,22 +17,33 @@
   <?php endif; ?>
 </div>
 
-<?php
-  $ext = strtolower(pathinfo($submission['file_path'], PATHINFO_EXTENSION));
-  $imgExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-?>
 <div class="nb-card p-4 mb-4">
-  <h3 class="font-display text-sm font-bold mb-3">File Jawaban</h3>
-  <?php if ($ext === 'pdf'): ?>
-    <embed src="/<?= esc($submission['file_path']) ?>" type="application/pdf" class="w-full rounded-xl nb-border" style="height: 70vh;">
-  <?php elseif (in_array($ext, $imgExts)): ?>
-    <img src="/<?= esc($submission['file_path']) ?>" alt="Jawaban" class="w-full rounded-xl nb-border">
+  <h3 class="font-display text-sm font-bold mb-3">Jawaban Murid</h3>
+  <?php if (!empty($submission['file_path'])): ?>
+    <?php
+      $ext = strtolower(pathinfo($submission['file_path'], PATHINFO_EXTENSION));
+      $imgExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    ?>
+    <?php if ($ext === 'pdf'): ?>
+      <embed src="/<?= esc($submission['file_path']) ?>" type="application/pdf" class="w-full rounded-xl nb-border" style="height: 70vh;">
+    <?php elseif (in_array($ext, $imgExts)): ?>
+      <img src="/<?= esc($submission['file_path']) ?>" alt="Jawaban" class="w-full rounded-xl nb-border">
+    <?php else: ?>
+      <p class="text-xs text-ink/50 mb-2">Preview tidak tersedia untuk tipe file ini.</p>
+    <?php endif; ?>
+    <a href="/<?= esc($submission['file_path']) ?>" target="_blank" class="block w-full mt-3 py-2.5 bg-nbblue/10 text-nbblue rounded-xl text-xs font-bold text-center">
+      <i class="fa-solid fa-download mr-1"></i> Unduh / Buka File
+    </a>
+  <?php elseif (!empty($submission['answer'])): ?>
+    <?php $answers = json_decode($submission['answer'], true) ?? []; ?>
+    <p class="text-sm text-ink/70">
+      <?php foreach ($answers as $qid => $opt): ?>
+        <span class="inline-block mr-2 mb-1 px-2 py-1 bg-nbpurple/10 text-nbpurple rounded-lg text-xs font-bold">Soal <?= esc($qid) ?>: <?= strtoupper(esc($opt)) ?></span>
+      <?php endforeach; ?>
+    </p>
   <?php else: ?>
-    <p class="text-xs text-ink/50 mb-2">Preview tidak tersedia untuk tipe file ini.</p>
+    <p class="text-xs text-ink/50">Tidak ada file atau jawaban.</p>
   <?php endif; ?>
-  <a href="/<?= esc($submission['file_path']) ?>" target="_blank" class="block w-full mt-3 py-2.5 bg-nbblue/10 text-nbblue rounded-xl text-xs font-bold text-center">
-    <i class="fa-solid fa-download mr-1"></i> Unduh / Buka File
-  </a>
 </div>
 
 <div class="nb-card p-4">

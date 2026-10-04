@@ -758,7 +758,34 @@ class GuruController extends BaseController
             'due_date'    => $this->request->getPost('due_date'),
         ];
 
-        $this->assignmentModel->insert($data);
+        $type = $this->request->getPost('type');
+        if ($type === 'quiz') {
+            $data['type'] = 'quiz';
+        } else {
+            $data['type'] = 'upload';
+        }
+
+        $assignmentId = $this->assignmentModel->insert($data);
+
+        // Simpan soal kuis jika tipe quiz
+        if ($type === 'quiz') {
+            $questions = $this->request->getPost('questions') ?? [];
+            $db = \Config\Database::connect();
+            foreach ($questions as $idx => $q) {
+                if (empty(trim($q['question'] ?? ''))) continue;
+                $db->table('assignment_questions')->insert([
+                    'assignment_id' => $assignmentId,
+                    'question'      => $q['question'],
+                    'option_a'      => $q['option_a'] ?? '',
+                    'option_b'      => $q['option_b'] ?? '',
+                    'option_c'      => $q['option_c'] ?? '',
+                    'option_d'      => $q['option_d'] ?? '',
+                    'correct'       => $q['correct'] ?? 'a',
+                    'order'         => $idx,
+                ]);
+            }
+        }
+
         return redirect()->to('/guru/tugas')->with('success', 'Tugas berhasil ditambahkan.');
     }
 
@@ -784,13 +811,17 @@ class GuruController extends BaseController
 
         $books     = $this->bookModel->getByGuru($this->getGuruId());
         $materials = $this->materialModel->getByGuru($this->getGuruId());
+        $questions = \Config\Database::connect()->table('assignment_questions')
+            ->where('assignment_id', $id)
+            ->orderBy('order', 'ASC')
+            ->get()->getResultArray();
 
         $isHtmx = ($_SERVER['HTTP_HX_REQUEST'] ?? '') === 'true';
         if ($isHtmx) {
-            return view('guru/htmx/assignment-edit', ['assignment' => $assignment, 'books' => $books, 'materials' => $materials]);
+            return view('guru/htmx/assignment-edit', ['assignment' => $assignment, 'books' => $books, 'materials' => $materials, 'questions' => $questions]);
         }
 
-        return view('guru/assignment-edit', ['assignment' => $assignment, 'books' => $books, 'materials' => $materials]);
+        return view('guru/assignment-edit', ['assignment' => $assignment, 'books' => $books, 'materials' => $materials, 'questions' => $questions]);
     }
 
     public function assignmentSubmissions($id)
@@ -879,6 +910,27 @@ class GuruController extends BaseController
         ];
 
         $this->assignmentModel->update($id, $data);
+
+        // Jika tipe quiz, perbarui soal: hapus lama lalu insert ulang
+        $db = \Config\Database::connect();
+        if ($this->request->getPost('questions') !== null) {
+            $db->table('assignment_questions')->where('assignment_id', $id)->delete();
+            $questions = $this->request->getPost('questions') ?? [];
+            foreach ($questions as $idx => $q) {
+                if (empty(trim($q['question'] ?? ''))) continue;
+                $db->table('assignment_questions')->insert([
+                    'assignment_id' => $id,
+                    'question'      => $q['question'],
+                    'option_a'      => $q['option_a'] ?? '',
+                    'option_b'      => $q['option_b'] ?? '',
+                    'option_c'      => $q['option_c'] ?? '',
+                    'option_d'      => $q['option_d'] ?? '',
+                    'correct'       => $q['correct'] ?? 'a',
+                    'order'         => $idx,
+                ]);
+            }
+        }
+
         return redirect()->to('/guru/tugas')->with('success', 'Tugas berhasil diperbarui.');
     }
 

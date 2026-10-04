@@ -93,6 +93,54 @@ class MissionController extends BaseController
             ->with('success', 'Tugas berhasil diunggah.');
     }
 
+    public function submitQuiz($assignmentId)
+    {
+        $assignmentId = (int) $assignmentId;
+        $assignment = (new AssignmentModel())->find($assignmentId);
+        if (!$assignment || ($assignment['type'] ?? 'upload') !== 'quiz') {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $studentId = session()->get('student_id');
+        $questions = \Config\Database::connect()->table('assignment_questions')
+            ->where('assignment_id', $assignmentId)
+            ->orderBy('order', 'ASC')
+            ->get()->getResultArray();
+
+        $answers = $this->request->getPost('answers') ?? [];
+        $benar = 0;
+        foreach ($questions as $q) {
+            $given = $answers[$q['id']] ?? null;
+            if ($given !== null && $given === $q['correct']) {
+                $benar++;
+            }
+        }
+
+        $total = max(count($questions), 1);
+        $score = round($benar / $total * 100, 2);
+
+        $submissionModel = new SubmissionModel();
+        $existing = $submissionModel->getByAssignmentAndStudent($assignmentId, $studentId);
+        $data = [
+            'assignment_id' => $assignmentId,
+            'student_id'    => $studentId,
+            'file_path'     => null,
+            'original_name' => null,
+            'score'         => $score,
+            'feedback'      => "Anda menjawab {$benar} dari {$total} soal dengan benar.",
+            'answer'        => json_encode($answers),
+        ];
+
+        if ($existing) {
+            $submissionModel->update($existing['id'], $data);
+        } else {
+            $submissionModel->insert($data);
+        }
+
+        return redirect()->to('/murid/missions/' . $assignment['material_id'] . '/assignment')
+            ->with('success', 'Kuis selesai! Nilai: ' . $score);
+    }
+
     public function certificate($submissionId)
     {
         $submissionId = (int) $submissionId;
@@ -154,6 +202,16 @@ class MissionController extends BaseController
                 session()->get('student_id'),
                 array_column((new AssignmentModel())->getByMaterial($materialId), 'id')
             ),
+            'quizQuestions' => (function () use ($materialId) {
+                $rows = \Config\Database::connect()->table('assignment_questions')
+                    ->join('assignments', 'assignments.id = assignment_questions.assignment_id')
+                    ->where('assignments.material_id', $materialId)
+                    ->orderBy('assignment_questions.order', 'ASC')
+                    ->get()->getResultArray();
+                $map = [];
+                foreach ($rows as $r) { $map[$r['assignment_id']][] = $r; }
+                return $map;
+            })(),
             'progress'   => (new StudentMaterialProgressModel())
                 ->where('student_id', session()->get('student_id'))
                 ->where('material_id', $materialId)

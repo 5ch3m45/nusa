@@ -10,6 +10,13 @@
 
 <form action="/guru/tugas" method="post" class="nb-card p-4 space-y-4">
   <div>
+    <label class="text-xs font-bold text-ink/60 block mb-1">Jenis Tugas</label>
+    <select name="type" id="assignment_type" class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue">
+      <option value="upload">Upload File (siswa menulis/upload dokumen)</option>
+      <option value="quiz">Kuis Pilihan Ganda</option>
+    </select>
+  </div>
+  <div>
     <label class="text-xs font-bold text-ink/60 block mb-1">Judul Tugas</label>
     <input type="text" name="title" required class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue">
   </div>
@@ -57,6 +64,28 @@
       <label class="text-xs font-bold text-ink/60 block mb-1">Deadline</label>
       <input type="date" name="due_date" required class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-nbblue">
     </div>
+  </div>
+  <div id="quizBuilder" class="hidden space-y-3 border-t border-ink/10 pt-4">
+    <h3 class="font-bold text-sm">Soal Kuis</h3>
+    <div id="questionsContainer" class="space-y-3">
+      <div class="question-item nb-border rounded-xl p-3 space-y-2">
+        <input type="text" name="questions[0][question]" placeholder="Pertanyaan" class="w-full bg-white/50 nb-border rounded-xl px-4 py-3 text-sm">
+        <hr>
+        <div class="space-y-2">
+          <input type="text" name="questions[0][option_a]" placeholder="A" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">
+          <input type="text" name="questions[0][option_b]" placeholder="B" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">
+          <input type="text" name="questions[0][option_c]" placeholder="C" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">
+          <input type="text" name="questions[0][option_d]" placeholder="D" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">
+        </div>
+        <select name="questions[0][correct]" class="w-full bg-white/50 nb-border rounded-xl px-3 py-2 text-sm">
+          <option value="a">Jawaban benar: A</option>
+          <option value="b">Jawaban benar: B</option>
+          <option value="c">Jawaban benar: C</option>
+          <option value="d">Jawaban benar: D</option>
+        </select>
+      </div>
+    </div>
+    <button type="button" id="addQuestionBtn" class="w-full py-2.5 bg-nbblue/10 text-nbblue rounded-xl text-sm font-bold">+ Tambah Soal</button>
   </div>
   <button type="submit" class="w-full py-3.5 bg-nbgreen text-white rounded-xl text-sm font-bold nb-btn">
     Simpan Tugas
@@ -106,6 +135,35 @@ if (select) {
       document.getElementById('add_class').value = book.class;
       document.getElementById('add_semester').value = book.semester;
     }
+  });
+}
+
+// Toggle quiz builder
+const typeSelect = document.getElementById('assignment_type');
+const quizBuilder = document.getElementById('quizBuilder');
+if (typeSelect && quizBuilder) {
+  typeSelect.addEventListener('change', function() {
+    quizBuilder.classList.toggle('hidden', this.value !== 'quiz');
+  });
+}
+
+// Add question
+let questionIndex = 1;
+const addBtn = document.getElementById('addQuestionBtn');
+if (addBtn) {
+  addBtn.addEventListener('click', function() {
+    const container = document.getElementById('questionsContainer');
+    const template = container.querySelector('.question-item');
+    const clone = template.cloneNode(true);
+    clone.querySelectorAll('input, select').forEach(el => {
+      el.name = el.name.replace('[0]', '[' + questionIndex + ']');
+      if (el.tagName === 'INPUT') el.value = '';
+      if (el.tagName === 'SELECT') el.value = 'a';
+    });
+    clone.querySelectorAll('.grid').forEach(g => { g.classList.remove('grid', 'grid-cols-2', 'gap-2'); g.classList.add('space-y-2'); });
+    clone.querySelectorAll('input').forEach(inp => inp.classList.add('w-full'));
+    container.appendChild(clone);
+    questionIndex++;
   });
 }
 })();

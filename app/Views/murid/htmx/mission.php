@@ -50,8 +50,11 @@
             <h4 class="font-display font-bold text-sm leading-snug"><?= esc($material['title'] ?? '') ?></h4>
           </div>
           <div class="text-[11px] text-ink/60 font-semibold bg-white/50 nb-border rounded-xl p-2.5 flex items-center gap-1.5">
-            <?php if (!empty($material['is_done'])): ?>
-              <i class="fa-solid fa-circle-check text-nbgreen"></i> Selesai<?= ($material['score'] ?? null) !== null ? ' · Nilai ' . esc($material['score']) : '' ?>
+            <?php $totalA = (int) ($material['total_assignments'] ?? 0); $doneA = (int) ($material['submitted_count'] ?? 0); ?>
+            <?php if ($totalA > 0 && $doneA >= $totalA): ?>
+              <i class="fa-solid fa-circle-check text-nbgreen"></i> Selesai<?= ($material['uploaded_avg_score'] ?? null) !== null ? ' · Nilai ' . esc($material['uploaded_avg_score']) : '' ?>
+            <?php elseif ($doneA > 0): ?>
+              <i class="fa-solid fa-book-open text-nbblue"></i> Sedang dikerjakan (<?= $doneA ?>/<?= $totalA ?>)<?= ($material['uploaded_avg_score'] ?? null) !== null ? ' · Nilai ' . esc($material['uploaded_avg_score']) : '' ?>
             <?php elseif (!empty($material['started_at']) || !empty($material['last_accessed_at'])): ?>
               <i class="fa-solid fa-book-open text-nbblue"></i> Sedang dipelajari
             <?php else: ?>

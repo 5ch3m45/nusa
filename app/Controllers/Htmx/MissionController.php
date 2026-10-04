@@ -72,6 +72,16 @@ class MissionController extends BaseController
                 session()->get('student_id'),
                 array_column((new AssignmentModel())->getByMaterial($materialId), 'id')
             ),
+            'quizQuestions' => (function () use ($materialId) {
+                $rows = \Config\Database::connect()->table('assignment_questions')
+                    ->join('assignments', 'assignments.id = assignment_questions.assignment_id')
+                    ->where('assignments.material_id', $materialId)
+                    ->orderBy('assignment_questions.order', 'ASC')
+                    ->get()->getResultArray();
+                $map = [];
+                foreach ($rows as $r) { $map[$r['assignment_id']][] = $r; }
+                return $map;
+            })(),
             'progress'    => (new StudentMaterialProgressModel())
                 ->where('student_id', session()->get('student_id'))
                 ->where('material_id', $materialId)

@@ -19,6 +19,39 @@
         <?php endif; ?>
 
         <?php $sub = $submissions[$assignment['id']] ?? null; ?>
+        <?php $isQuiz = ($assignment['type'] ?? 'upload') === 'quiz'; ?>
+
+        <?php if ($isQuiz): ?>
+          <?php $questions = $quizQuestions[$assignment['id']] ?? []; ?>
+          <?php if ($sub && $sub['score'] !== null): ?>
+            <div class="mt-1 p-2.5 bg-nbgreen/10 rounded-xl">
+              <p class="text-[11px] font-bold text-nbgreen"><i class="fa-solid fa-star mr-1"></i>Nilai: <?= esc($sub['score']) ?></p>
+              <p class="text-[11px] text-ink/60 italic mt-0.5">"<?= esc($sub['feedback'] ?? '') ?>"</p>
+            </div>
+            <a href="/murid/sertifikat/<?= $sub['id'] ?>" target="_blank" class="block w-full py-2.5 mt-1 bg-nbyellow text-ink rounded-xl text-[11px] font-bold text-center nb-btn">
+              <i class="fa-solid fa-award mr-1"></i> Unduh Piagam
+            </a>
+          <?php elseif (!empty($questions)): ?>
+            <form action="/murid/assignments/<?= $assignment['id'] ?>/quiz" method="post" class="space-y-3 pt-2">
+              <?php foreach ($questions as $i => $q): ?>
+                <div class="nb-border rounded-xl p-3 space-y-2">
+                  <p class="text-[11px] font-bold text-ink"><?= ($i + 1) ?>. <?= esc($q['question']) ?></p>
+                  <?php foreach (['a' => 'option_a', 'b' => 'option_b', 'c' => 'option_c', 'd' => 'option_d'] as $key => $opt): ?>
+                    <label class="flex items-center gap-2 text-[11px] text-ink/70 cursor-pointer">
+                      <input type="radio" name="answers[<?= $q['id'] ?>]" value="<?= $key ?>" required class="accent-nbblue">
+                      <span><?= strtoupper($key) ?>. <?= esc($q[$opt]) ?></span>
+                    </label>
+                  <?php endforeach; ?>
+                </div>
+              <?php endforeach; ?>
+              <button type="submit" class="w-full py-2.5 bg-nbblue text-white rounded-xl text-[11px] font-bold nb-btn">
+                Kumpulkan Jawaban
+              </button>
+            </form>
+          <?php else: ?>
+            <p class="text-[11px] text-ink/40">Belum ada soal untuk tugas ini.</p>
+          <?php endif; ?>
+        <?php else: ?>
         <?php if ($sub): ?>
           <p class="text-[11px] text-nbgreen font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>Sudah dikumpulkan: <a href="/<?= esc($sub['file_path']) ?>" target="_blank" class="underline"><?= esc($sub['original_name']) ?></a></p>
           <?php if ($sub['score'] !== null): ?>
@@ -43,6 +76,7 @@
             <?= $sub ? 'Ganti File Tugas' : 'Upload Tugas' ?>
           </button>
         </form>
+        <?php endif; ?>
       </div>
     <?php endforeach; ?>
   </div>
