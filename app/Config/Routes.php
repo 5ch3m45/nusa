@@ -53,6 +53,8 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
     $routes->get('tugas/edit/(:num)', 'GuruController::editAssignmentForm/$1');
     $routes->get('tugas/(:num)/submissions', 'GuruController::assignmentSubmissions/$1');
     $routes->get('tugas/(:num)/submissions/(:num)', 'GuruController::submissionDetail/$1/$2');
+    $routes->get('tugas/(:num)/submissions/(:num)/unlock', 'GuruController::unlockSubmission/$1/$2');
+    $routes->get('tugas/(:num)/submissions/unlock-all', 'GuruController::unlockAllSubmissions/$1');
     $routes->post('tugas/(:num)/submissions/(:num)/grade', 'GuruController::gradeSubmission/$1/$2');
     $routes->get('tugas/delete/(:num)', 'GuruController::deleteAssignment/$1');
     $routes->get('nilai', 'GuruController::grades');

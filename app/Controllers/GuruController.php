@@ -902,6 +902,37 @@ class GuruController extends BaseController
             ->with('success', 'Nilai berhasil disimpan.');
     }
 
+    public function unlockSubmission($assignmentId, $submissionId)
+    {
+        $assignment = $this->assignmentModel->find($assignmentId);
+        if (!$assignment || $assignment['guru_id'] != $this->getGuruId()) {
+            return redirect()->to('/guru/tugas')->with('error', 'Tugas tidak ditemukan.');
+        }
+
+        \Config\Database::connect()->table('submissions')
+            ->where('id', $submissionId)
+            ->where('assignment_id', $assignmentId)
+            ->update(['answers_locked' => 0]);
+
+        return redirect()->to('/guru/tugas/' . $assignmentId . '/submissions')
+            ->with('success', 'Jawaban murid berhasil di-unlock.');
+    }
+
+    public function unlockAllSubmissions($assignmentId)
+    {
+        $assignment = $this->assignmentModel->find($assignmentId);
+        if (!$assignment || $assignment['guru_id'] != $this->getGuruId()) {
+            return redirect()->to('/guru/tugas')->with('error', 'Tugas tidak ditemukan.');
+        }
+
+        \Config\Database::connect()->table('submissions')
+            ->where('assignment_id', $assignmentId)
+            ->update(['answers_locked' => 0]);
+
+        return redirect()->to('/guru/tugas/' . $assignmentId . '/submissions')
+            ->with('success', 'Semua jawaban murid berhasil di-unlock.');
+    }
+
     public function updateAssignment($id)
     {
         $data = [

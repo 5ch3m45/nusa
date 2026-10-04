@@ -18,6 +18,11 @@ class AchievementController extends BaseController
             ->join('materials', 'materials.id = assignments.material_id', 'left')
             ->where('submissions.student_id', $studentId)
             ->where('submissions.score IS NOT NULL')
+            ->groupStart()
+                ->where('assignments.type', 'upload')
+                ->orWhere('submissions.answers_locked', 1)
+                ->orWhere('assignments.due_date <', date('Y-m-d'))
+            ->groupEnd()
             ->orderBy('submissions.updated_at', 'DESC')
             ->get()
             ->getResultArray();

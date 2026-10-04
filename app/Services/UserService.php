@@ -25,8 +25,14 @@ class UserService
             $db = \Config\Database::connect();
 
             $starsCount = $db->table('submissions')
+                ->join('assignments', 'assignments.id = submissions.assignment_id')
                 ->where('student_id', $studentId)
                 ->where('score IS NOT NULL')
+                ->groupStart()
+                    ->where('assignments.type', 'upload')
+                    ->orWhere('submissions.answers_locked', 1)
+                    ->orWhere('assignments.due_date <', date('Y-m-d'))
+                ->groupEnd()
                 ->countAllResults();
 
             $scoresRows = $db->table('submissions')

@@ -28,6 +28,11 @@
 </div>
 
 <div id="submissions" class="space-y-3">
+  <?php if (($assignment['type'] ?? 'upload') === 'quiz'): ?>
+    <a href="/guru/tugas/<?= $assignment['id'] ?>/submissions/unlock-all" onclick="return confirm('Unlock SEMUA jawaban murid untuk tugas ini?')" class="block w-full py-2.5 bg-nborange/10 text-nborange rounded-xl text-xs font-bold text-center nb-btn">
+      <i class="fa-solid fa-lock-open mr-1"></i> Unlock Semua Jawaban
+    </a>
+  <?php endif; ?>
   <?php if (empty($submissions)): ?>
     <div class="nb-card p-8 text-center text-ink/40 text-sm">
       <i class="fa-solid fa-inbox text-3xl mb-2"></i>
@@ -51,6 +56,9 @@
             <?php elseif (!empty($s['answer'])): ?>
               <p class="text-[11px] text-nbpurple font-semibold mt-1"><i class="fa-solid fa-list-check mr-1"></i>Tugas Kuis</p>
             <?php endif; ?>
+            <?php if (($assignment['type'] ?? 'upload') === 'quiz' && !empty($s['answers_locked'])): ?>
+              <p class="text-[11px] text-nborange font-semibold mt-1"><i class="fa-solid fa-lock mr-1"></i>Jawaban Terkunci</p>
+            <?php endif; ?>
             <?php if (!empty($s['note'])): ?>
               <p class="text-[11px] text-ink/60 mt-1 italic">"<?= esc($s['note']) ?>"</p>
             <?php endif; ?>
@@ -60,6 +68,14 @@
               <p class="text-[11px] text-ink/40 mt-1">Belum dinilai</p>
             <?php endif; ?>
           </div>
+          <?php if (($assignment['type'] ?? 'upload') === 'quiz' && !empty($s['answers_locked'])): ?>
+            <div class="shrink-0 flex flex-col items-center gap-1">
+              <a href="/guru/tugas/<?= $assignment['id'] ?>/submissions/<?= $s['id'] ?>/unlock" onclick="event.stopPropagation(); return confirm('Unlock jawaban murid ini?')" class="w-9 h-9 bg-nborange/10 text-nborange rounded-xl flex items-center justify-center active:bg-nborange active:text-white transition" title="Unlock jawaban">
+                <i class="fa-solid fa-lock-open text-xs"></i>
+              </a>
+              <span class="text-[9px] font-bold text-nborange">Unlock</span>
+            </div>
+          <?php endif; ?>
         </div>
       </div>
     <?php endforeach; ?>
